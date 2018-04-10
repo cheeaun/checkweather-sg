@@ -7,7 +7,7 @@
     "start": "parcel index.html -d tmp",
     "build": "parcel build index.html",
     "parcel": "parcel",
-    "deploy": "cd dist && now --static"
+    "deploy": "cd dist && now --static && now alias"
   },
   "keywords": [
     "weather",
