@@ -45,6 +45,7 @@ h1 {
 }
 #legend h2,
 #legend h3 {
+  font-weight: normal;
   margin: 0 0 .5em;
   font-size: 1em;
   padding: 0;
@@ -83,9 +84,15 @@ h1 {
   justify-content: space-between;
 }
 #rain-intensity-gradient {
-  height: 1em;
+  color: #000;
+  text-shadow: 1px 1px 1px #fff, 1px -1px 1px #fff, -1px -1px 1px #fff, -1px 1px 1px #fff, 1px 1px #fff, 1px -1px #fff, -1px -1px #fff, -1px 1px #fff;
+  text-transform: uppercase;
+  padding: .4em 1em;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-  border-radius: 8px;
+  border-radius: 123123px;
   background: linear-gradient(to left, #40FFFD, #3BEEEC, #32D0D2, #2CB9BD, #229698, #1C827D, #1B8742, #229F44, #27B240, #2CC53B, #30D43E, #38EF46, #3BFB49, #59FA61, #FEFB63, #FDFA53, #FDEB50, #FDD74A, #FCC344, #FAB03F, #FAA23D, #FB8938, #FB7133, #F94C2D, #F9282A, #DD1423, #BE0F1D, #B21867, #D028A6, #F93DF5);
 }
 .mapboxgl-ctrl-custom-pitch{
