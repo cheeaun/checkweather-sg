@@ -67,22 +67,21 @@ h1 {
   vertical-align: middle;
   line-height: 0;
 }
-#weather-info-labels .icon-label img {
+
+#wind-compass {
   filter: invert(1);
   opacity: .7;
-  animation: rotate 5s linear both infinite;
+  animation: rotate 20s linear both infinite;
 }
 @keyframes rotate {
   0% { transform: rotate(0) }
   100% { transform: rotate(1turn) }
 }
-#rain-intensity-labels {
-  margin: .5em 0;
-  font-size: .8em;
-  opacity: .8;
-  display: flex;
-  justify-content: space-between;
+#wind-compass.compassing {
+  animation: none;
+  transition: .1s transform linear;
 }
+
 #rain-intensity-gradient {
   color: #000;
   text-shadow: 1px 1px 1px #fff, 1px -1px 1px #fff, -1px -1px 1px #fff, -1px 1px 1px #fff, 1px 1px #fff, 1px -1px #fff, -1px -1px #fff, -1px 1px #fff;
