@@ -168,18 +168,6 @@ const showRain = () => {
         map.getSource('rainmm').setData(genReadingsGeoJSON(data));
       })
       .catch(_=>_);
-    fetch(sources.temp)
-      .then(r => r.json())
-      .then(data => {
-        map.getSource('temp').setData(genReadingsGeoJSON(data));
-      })
-      .catch(_=>_);
-    fetch(sources.humid)
-      .then(r => r.json())
-      .then(data => {
-        map.getSource('humid').setData(genReadingsGeoJSON(data));
-      })
-      .catch(_=>_);
   } else {
     map.addSource('rainsource', {
       type: 'geojson',
@@ -264,12 +252,9 @@ const showRain = () => {
       map.setLayoutProperty('rainlay', 'visibility', pitch > 0 ? 'none' : 'visible');
     });
 
-    Promise.all([
-      fetch(sources.rainfall).then(r => r.json()),
-      fetch(sources.temp).then(r => r.json()),
-      fetch(sources.humid).then(r => r.json()),
-      fetch(sources.wind).then(r => r.json())
-    ]).then(([rainfallData, tempData, humidData, windData]) => {
+    fetch(sources.rainfall)
+    .then(r => r.json())
+    .then((rainfallData) => {
       map.addSource('rainmm', {
         type: 'geojson',
         data: genReadingsGeoJSON(rainfallData),
@@ -293,7 +278,33 @@ const showRain = () => {
           'text-halo-width': 1,
         },
       }, 'rainclouds');
+    });
+  }
+};
 
+const showWeather = () => {
+  const hasWeatherSource = map.getSource('temp');
+  if (hasWeatherSource){
+    Promise.all([
+      fetch(sources.temp),
+      fetch(sources.humid),
+      fetch(sources.wind)
+    ])
+    .then((responses) => Promise.all(responses.map(r => r.json())))
+    .then(([tempData, humidData, windData]) => {
+      map.getSource('temp').setData(genReadingsGeoJSON(tempData));
+      map.getSource('humid').setData(genReadingsGeoJSON(humidData));
+      map.getSource('wind').setData(genReadingsGeoJSON(windData));
+    })
+    .catch(_=>_);
+  } else {
+    Promise.all([
+      fetch(sources.temp),
+      fetch(sources.humid),
+      fetch(sources.wind)
+    ])
+    .then((responses) => Promise.all(responses.map(r => r.json())))
+    .then(([tempData, humidData, windData]) => {
       map.addSource('temp', {
         type: 'geojson',
         data: genReadingsGeoJSON(tempData),
@@ -382,8 +393,26 @@ const showRain = () => {
           },
         }, 'tempreadings');
       });
-    });
+    })
+    .catch(_=>_);
   }
+};
+
+const rafInterval = (fn, delay) => {
+  let rafint;
+  const start = () => requestAnimationFrame(() => {
+    fn();
+    fnTimeout();
+  });
+  const stop = () => clearTimeout(rafint);
+  const fnTimeout = () => {
+    stop();
+    rafint = setTimeout(start, delay);
+  }
+  return {
+    start,
+    stop,
+  };
 };
 
 let labelLayerId;
@@ -397,15 +426,6 @@ map.on('load', function(){
     }
   }
 
-  showRain();
-  const showRainLater = () => {
-    if (window.rainTimeout) clearTimeout(window.rainTimeout);
-    window.rainTimeout = setTimeout(() => {
-      requestAnimationFrame(() => {
-        showRain();
-        showRainLater();
-      });
-    }, 2.5 * 60*1000);
-  };
-  showRainLater();
+  rafInterval(showRain, 2.5 * 60 * 1000).start();
+  rafInterval(showWeather, 60 * 1000).start();
 });
