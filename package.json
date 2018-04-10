@@ -1,0 +1,27 @@
+{
+  "name": "weather-sg",
+  "version": "1.0.0",
+  "description": "Yet another weather app for Singapore",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel index.html -d tmp",
+    "build": "parcel build index.html",
+    "parcel": "parcel",
+    "deploy": "cd dist && now --static"
+  },
+  "keywords": [
+    "weather",
+    "rain",
+    "rainfall",
+    "singapore",
+    "map"
+  ],
+  "author": "Lim Chee Aun",
+  "license": "MIT",
+  "dependencies": {
+    "new-point-haversine": "~0.0.7"
+  },
+  "devDependencies": {
+    "parcel-bundler": "~1.7.0"
+  }
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<title>Weather SG</title>
+<meta name="description" content="Yet another weather app for Singapore">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css">
+<link rel="stylesheet" href="app.css">
+<h1>Weather SG</h1>
+<div id="map"></div>
+<div id="legend">
+  <div class="labels">
+    <h2>Legend</h2>
+    <div id="weather-info-labels">
+      <span class="text-label" style="color:yellow">Temperature (°C)</span>
+      <span class="text-label" style="color:orange">Relative Humidity (%)</span>
+      <span class="text-label" style="color:aqua">Rainfall (mm)</span>
+      <span class="icon-label"><img src="assets/arrow-down.svg" width="16" height="16"> Wind Direction</span>
+    </div>
+  </div>
+  <div class="intensity">
+    <h3>Rain intensity</h3>
+    <div id="rain-intensity-labels">
+      <span>Heavy</span>
+      <span>Moderate</span>
+      <span>Light</span>
+    </div>
+    <div id="rain-intensity-gradient"></div>
+  </div>
+</div>
+<script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js"></script>
+<script src="app.js"></script>
