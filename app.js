@@ -468,7 +468,6 @@ if (window.DeviceOrientationEvent){
   // https://stackoverflow.com/a/47870694/20838
   var deviceorientation = 'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
   window.addEventListener(deviceorientation, function(e){
-    console.log(e);
     if (!e || e.alpha === null) return;
     const heading = e.compassHeading || e.webkitCompassHeading || compassHeading(e.alpha, e.beta, e.gamma);
     $windCompasss.classList.add('compassing');
