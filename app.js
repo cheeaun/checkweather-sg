@@ -421,8 +421,8 @@ map.on('load', function(){
     }
   }
 
-  rafInterval(showRain, 2.5 * 60 * 1000).start();
-  rafInterval(showWeather, 60 * 1000).start();
+  rafInterval(showRain, 2 * 60 * 1000).start(); // every 2 mins
+  rafInterval(showWeather, 60 * 1000).start(); // every min
 });
 
 // https://stackoverflow.com/a/21829819/20838
