@@ -355,11 +355,6 @@ const showWeather = () => {
           'text-color': 'orange',
           'text-halo-color': '#000',
           'text-halo-width': 1,
-          'text-opacity': [
-            'interpolate', ['linear'], ['zoom'],
-            8, .8,
-            14, .5
-          ]
         },
       }, 'rainclouds');
 
