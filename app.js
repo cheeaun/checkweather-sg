@@ -240,7 +240,7 @@ const showRain = () => {
           14, ['/', ['get', 'intensity'], 100]
         ],
       },
-    }, labelLayerId);
+    });
 
     let currentPitch = -1;
     map.on('pitchend', () => {
