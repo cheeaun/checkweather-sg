@@ -235,9 +235,9 @@ const showRain = () => {
       paint: {
         'fill-antialias': false,
         'fill-opacity': [
-          'interpolate', ['linear'], ['get', 'intensity'],
-          0, .25,
-          100, .9
+          'interpolate', ['linear'], ['zoom'],
+          8, 1,
+          14, ['/', ['get', 'intensity'], 100]
         ],
       },
     }, labelLayerId);
