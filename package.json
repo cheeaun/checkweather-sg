@@ -1,5 +1,5 @@
 {
-  "name": "weather-sg",
+  "name": "checkweather-sg",
   "version": "1.0.0",
   "description": "Yet another weather app for Singapore",
   "main": "index.html",
