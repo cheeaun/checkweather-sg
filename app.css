@@ -58,7 +58,7 @@ h1 {
   padding: .5em .6em;
   margin: 0 .5em .7em 0;
   background-color: #000;
-  border: 1px solid rgba(255,255,255,.5);
+  border: 1px solid rgba(255,255,255,.2);
   border-radius: 123123px;
 }
 #weather-info-labels span img {
