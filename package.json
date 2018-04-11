@@ -4,10 +4,10 @@
   "description": "Yet another weather app for Singapore",
   "main": "index.html",
   "scripts": {
+    "parcel": "parcel",
     "start": "parcel index.html -d tmp",
     "build": "parcel build index.html",
-    "parcel": "parcel",
-    "deploy": "rm -rf dist && npm run build && cd dist && now --static -n weather-sg && now alias weather-sg"
+    "deploy": "rm -rf dist && npm run build && gh-pages -d dist"
   },
   "keywords": [
     "weather",
@@ -22,6 +22,7 @@
     "new-point-haversine": "~0.0.7"
   },
   "devDependencies": {
+    "gh-pages": "~1.1.0",
     "parcel-bundler": "~1.7.0"
   }
 }
