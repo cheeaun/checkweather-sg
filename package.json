@@ -7,7 +7,7 @@
     "parcel": "parcel",
     "start": "parcel index.html -d tmp",
     "build": "parcel build index.html",
-    "deploy": "rm -rf dist && npm run build && cp CNAME dist && gh-pages -d dist"
+    "deploy": "rm -rf dist && npm run build && cp {CNAME,favicon.ico} dist && gh-pages -d dist"
   },
   "keywords": [
     "weather",
