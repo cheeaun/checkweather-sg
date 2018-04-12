@@ -146,7 +146,7 @@ const genReadingsGeoJSON = (data) => {
 
 let um;
 const sources = {
-  rain: 'https://rain-geojson-sg.now.sh/now',
+  rain: 'https://api.checkweather.sg/now',
   rainfall: 'https://api.data.gov.sg/v1/environment/rainfall',
   temp: 'https://api.data.gov.sg/v1/environment/air-temperature',
   humid: 'https://api.data.gov.sg/v1/environment/relative-humidity',
