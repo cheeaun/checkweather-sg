@@ -104,8 +104,9 @@ h1 {
 }
 
 #legend footer{
-  margin-top: .5em;
+  margin-top: .75em;
   font-size: 11px;
+  opacity: .8;
 }
 #legend footer a{
   color: inherit;
