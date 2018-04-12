@@ -28,8 +28,13 @@ h1 {
   right: 0;
   border-top-left-radius: 18px;
   width: 100%;
-  max-width: 560px;
+  max-width: 20em;
   transition: 1s opacity ease-in-out;
+}
+@media (min-width: 35em) {
+  #legend {
+    max-width: 35em;
+  }
 }
 #legend.faded {
   pointer-events: none;
