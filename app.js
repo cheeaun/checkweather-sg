@@ -147,10 +147,7 @@ const genReadingsGeoJSON = (data) => {
 
 const sources = {
   rain: 'https://api.checkweather.sg/now',
-  rainfall: 'https://api.data.gov.sg/v1/environment/rainfall',
-  temp: 'https://api.data.gov.sg/v1/environment/air-temperature',
-  humid: 'https://api.data.gov.sg/v1/environment/relative-humidity',
-  wind: 'https://api.data.gov.sg/v1/environment/wind-direction',
+  observations: 'https://api.checkweather.sg/observations',
 };
 
 const $loader = document.getElementById('loader');
@@ -268,156 +265,109 @@ const showRain = () => {
   }
 };
 
-const showRainfall = () => {
-  const hasRainMMSource = map.getSource('rainmm');
-  if (hasRainMMSource){
-    fetch(sources.rainfall)
-      .then(r => r.json())
-      .then(data => {
-        map.getSource('rainmm').setData(genReadingsGeoJSON(data));
-      })
-      .catch(_=>_);
+const showObservations = () => {
+  const observationsSource = map.getSource('observations');
+  if (observationsSource){
+    observationsSource.setData(sources.observations);
   } else {
-    fetch(sources.rainfall)
-      .then(r => r.json())
-      .then((rainfallData) => {
-        map.addSource('rainmm', {
-          type: 'geojson',
-          data: genReadingsGeoJSON(rainfallData),
-        });
-        map.addLayer({
-          id: 'rainreadings',
-          type: 'symbol',
-          source: 'rainmm',
-          filter: ['!=', 'reading', 0],
-          layout: {
-            'text-field': '{reading}',
-            'text-size': [
-              'interpolate', ['linear'], ['zoom'],
-              8, ['zoom'],
-              14, ['*', 1.5, ['zoom']]
-            ],
-          },
-          paint: {
-            'text-color': 'aqua',
-            'text-halo-color': '#000',
-            'text-halo-width': 1,
-          },
-        }, 'rainclouds');
-      });
-  }
-};
-
-const showWeather = () => {
-  const hasWeatherSource = map.getSource('temp');
-  if (hasWeatherSource){
-    Promise.all([
-      fetch(sources.temp),
-      fetch(sources.humid),
-      fetch(sources.wind)
-    ])
-    .then((responses) => Promise.all(responses.map(r => r.json())))
-    .then(([tempData, humidData, windData]) => {
-      map.getSource('temp').setData(genReadingsGeoJSON(tempData));
-      map.getSource('humid').setData(genReadingsGeoJSON(humidData));
-      map.getSource('wind').setData(genReadingsGeoJSON(windData));
-    })
-    .catch(_=>_);
-  } else {
-    Promise.all([
-      fetch(sources.temp),
-      fetch(sources.humid),
-      fetch(sources.wind)
-    ])
-    .then((responses) => Promise.all(responses.map(r => r.json())))
-    .then(([tempData, humidData, windData]) => {
-      map.addSource('temp', {
-        type: 'geojson',
-        data: genReadingsGeoJSON(tempData),
-      });
+    map.addSource('observations', {
+      type: 'geojson',
+      data: sources.observations,
+    });
+    map.addLayer({
+      id: 'tempreadings',
+      type: 'symbol',
+      source: 'observations',
+      filter: ['all', ['has', 'temp_celcius'], ['>', 'temp_celcius', 0]],
+      layout: {
+        'text-field': '{temp_celcius}°',
+        'text-allow-overlap': true,
+        'text-size': [
+          'interpolate', ['linear'], ['zoom'],
+          8, ['zoom'],
+          14, ['*', 1.5, ['zoom']]
+        ],
+        'text-padding': 1,
+      },
+      paint: {
+        'text-color': 'yellow',
+        'text-halo-color': '#000',
+        'text-halo-width': 1,
+      },
+    }, 'rainclouds');
+    map.addLayer({
+      id: 'humidreadings',
+      type: 'symbol',
+      source: 'observations',
+      minzoom: 10,
+      filter: ['all', ['has', 'relative_humidity'], ['>', 'relative_humidity', 0]],
+      layout: {
+        'text-field': '{relative_humidity}%',
+        'text-size': [
+          'interpolate', ['linear'], ['zoom'],
+          8, ['zoom'],
+          14, ['zoom']
+        ],
+        'text-offset': [0, -1.1],
+        'text-padding': 0,
+      },
+      paint: {
+        'text-color': 'orange',
+        'text-halo-color': '#000',
+        'text-halo-width': 1,
+      },
+    }, 'rainclouds');
+    map.addLayer({
+      id: 'rainreadings',
+      type: 'symbol',
+      source: 'observations',
+      minzoom: 12,
+      filter: ['all', ['has', 'rain_mm'], ['>', 'rain_mm', 0]],
+      layout: {
+        'text-field': '{rain_mm}',
+        'text-size': [
+          'interpolate', ['linear'], ['zoom'],
+          8, ['zoom'],
+          14, ['zoom']
+        ],
+        'text-offset': [0, 1.1],
+        'text-padding': 0,
+      },
+      paint: {
+        'text-color': 'aqua',
+        'text-halo-color': '#000',
+        'text-halo-width': 1,
+      },
+    }, 'rainclouds');
+    map.loadImage(arrowPath, (e, image) => {
+      if (e) throw e;
+      map.addImage('arrow', image, { sdf: true });
       map.addLayer({
-        id: 'tempreadings',
+        id: 'windirections',
         type: 'symbol',
-        source: 'temp',
-        filter: ['!=', 'reading', 0],
+        source: 'observations',
+        filter: ['has', 'wind_direction'],
         layout: {
-          'text-field': '{reading}°',
-          'text-allow-overlap': true,
-          'text-size': [
+          'icon-image': 'arrow',
+          'icon-rotate': ['get', 'wind_direction'],
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+          'icon-pitch-alignment': 'map',
+          'icon-rotation-alignment': 'map',
+          'icon-size': [
             'interpolate', ['linear'], ['zoom'],
-            8, ['zoom'],
-            14, ['*', 1.5, ['zoom']]
+            8, .4,
+            14, 3
           ],
-          'text-padding': 1,
         },
         paint: {
-          'text-color': 'yellow',
-          'text-halo-color': '#000',
-          'text-halo-width': 1,
+          'icon-color': '#fff',
+          'icon-opacity': .2,
         },
-      }, 'rainclouds');
-
-      map.addSource('humid', {
-        type: 'geojson',
-        data: genReadingsGeoJSON(humidData),
-      });
-      map.addLayer({
-        id: 'humidreadings',
-        type: 'symbol',
-        source: 'humid',
-        minzoom: 10,
-        filter: ['!=', 'reading', 0],
-        layout: {
-          'text-field': '{reading}%',
-          'text-size': [
-            'interpolate', ['linear'], ['zoom'],
-            8, ['zoom'],
-            14, ['zoom']
-          ],
-          'text-offset': [0, -1],
-          'text-padding': 0,
-        },
-        paint: {
-          'text-color': 'orange',
-          'text-halo-color': '#000',
-          'text-halo-width': 1,
-        },
-      }, 'rainclouds');
-
-      map.addSource('wind', {
-        type: 'geojson',
-        data: genReadingsGeoJSON(windData),
-      });
-      map.loadImage(arrowPath, (e, image) => {
-        if (e) throw e;
-        map.addImage('arrow', image, { sdf: true });
-        map.addLayer({
-          id: 'windirections',
-          type: 'symbol',
-          source: 'wind',
-          layout: {
-            'icon-image': 'arrow',
-            'icon-rotate': ['get', 'reading'],
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true,
-            'icon-pitch-alignment': 'map',
-            'icon-rotation-alignment': 'map',
-            'icon-size': [
-              'interpolate', ['linear'], ['zoom'],
-              8, .4,
-              14, 3
-            ],
-          },
-          paint: {
-            'icon-color': '#fff',
-            'icon-opacity': .2,
-          },
-        }, 'tempreadings');
-      });
-    })
-    .catch(_=>_);
+      }, 'tempreadings');
+    });
   }
-};
+}
 
 const rafInterval = (fn, delay) => {
   let rafint;
@@ -473,8 +423,7 @@ map.on('load', function(){
   });
 
   rafInterval(showRain, 60 * 1000).start(); // every min
-  rafInterval(showWeather, 2 * 60 * 1000).start(); // every 2 mins
-  rafInterval(showRainfall, 5 * 60 * 1000).start(); // every 5 mins
+  rafInterval(showObservations, 2 * 60 * 1000).start(); // every 2 mins
 });
 
 // https://stackoverflow.com/a/21829819/20838
