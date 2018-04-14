@@ -318,7 +318,7 @@ const showObservations = () => {
         'text-halo-color': '#000',
         'text-halo-width': 1,
       },
-    }, 'rainclouds');
+    }, 'tempreadings');
     map.addLayer({
       id: 'rainreadings',
       type: 'symbol',
@@ -340,33 +340,35 @@ const showObservations = () => {
         'text-halo-color': '#000',
         'text-halo-width': 1,
       },
-    }, 'rainclouds');
+    }, 'humidreadings');
     map.loadImage(arrowPath, (e, image) => {
-      if (e) throw e;
+      if (e) return;
       map.addImage('arrow', image, { sdf: true });
-      map.addLayer({
-        id: 'windirections',
-        type: 'symbol',
-        source: 'observations',
-        filter: ['has', 'wind_direction'],
-        layout: {
-          'icon-image': 'arrow',
-          'icon-rotate': ['get', 'wind_direction'],
-          'icon-allow-overlap': true,
-          'icon-ignore-placement': true,
-          'icon-pitch-alignment': 'map',
-          'icon-rotation-alignment': 'map',
-          'icon-size': [
-            'interpolate', ['linear'], ['zoom'],
-            8, .4,
-            14, 3
-          ],
-        },
-        paint: {
-          'icon-color': '#fff',
-          'icon-opacity': .2,
-        },
-      }, 'tempreadings');
+      setTimeout(() => {
+        map.addLayer({
+          id: 'windirections',
+          type: 'symbol',
+          source: 'observations',
+          filter: ['has', 'wind_direction'],
+          layout: {
+            'icon-image': 'arrow',
+            'icon-rotate': ['get', 'wind_direction'],
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-pitch-alignment': 'map',
+            'icon-rotation-alignment': 'map',
+            'icon-size': [
+              'interpolate', ['linear'], ['zoom'],
+              8, .4,
+              14, 3
+            ],
+          },
+          paint: {
+            'icon-color': '#fff',
+            'icon-opacity': .2,
+          },
+        }, 'tempreadings');
+      }, 300);
     });
   }
 }
