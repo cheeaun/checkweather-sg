@@ -2,7 +2,7 @@ import arrowPath from './assets/arrow-down.png';
 import rainDrops from './assets/rain.png';
 
 const center = [103.8475, 1.3011];
-const lowerLat = 1.1450, upperLat = 1.4572, lowerLong = 103.565, upperLong = 104.130;
+const lowerLat = 1.156, upperLat = 1.475, lowerLong = 103.565, upperLong = 104.130;
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlZWF1biIsImEiOiIwMTkyNjRiOWUzOTMyZThkYTE3YjMyMWFiZGU2OTZlNiJ9.XsOEKtyctGiNGNsmVhetYg';
 if (window.$map) window.$map.remove();
@@ -446,6 +446,31 @@ map.on('load', function(){
       break;
     }
   }
+
+  map.addLayer({
+    id: 'bbox',
+    type: 'fill',
+    source: {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Polygon',
+          coordinates: [[
+            [lowerLong, upperLat],
+            [upperLong, upperLat],
+            [upperLong, lowerLat],
+            [lowerLong, lowerLat],
+            [lowerLong, upperLat]
+          ]],
+        },
+      },
+    },
+    paint: {
+      'fill-color': 'rgba(255,255,255,.05)',
+    },
+  });
 
   rafInterval(showRain, 60 * 1000).start(); // every min
   rafInterval(showWeather, 2 * 60 * 1000).start(); // every 2 mins
