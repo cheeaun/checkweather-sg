@@ -3,6 +3,10 @@ Check Weather SG
 
 > ☀️🌧 Yet another weather app for Singapore
 
+![2D radar](screenshots/screenshot-2d.png)
+![3D radar](screenshots/screenshot-3d.png)
+![3D clouds and rain](screenshots/screenshot-clouds.png)
+
 Story
 ---
 
