@@ -151,7 +151,9 @@ const sources = {
 };
 
 const $loader = document.getElementById('loader');
-map.on('sourcedataloading', () => $loader.hidden = false);
+map.on('sourcedataloading', (e) => {
+  if (e.source.type !== 'vector') $loader.hidden = false;
+});
 map.on('sourcedata', () => $loader.hidden = true);
 
 const showRain = () => {
