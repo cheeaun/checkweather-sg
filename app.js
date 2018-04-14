@@ -397,6 +397,7 @@ map.on('load', function(){
     }
   }
 
+  // Mask the area outside Singapore
   map.addLayer({
     id: 'bbox',
     type: 'fill',
@@ -408,6 +409,8 @@ map.on('load', function(){
         geometry: {
           type: 'Polygon',
           coordinates: [[
+            [-180, 90], [180, 90], [180, -90], [-180, -90], [-180, 90]
+          ], [
             [lowerLong, upperLat],
             [upperLong, upperLat],
             [upperLong, lowerLat],
@@ -418,9 +421,9 @@ map.on('load', function(){
       },
     },
     paint: {
-      'fill-color': 'rgba(255,255,255,.05)',
+      'fill-color': 'rgba(0,0,0,.75)',
     },
-  });
+  }, labelLayerId);
 
   rafInterval(showRain, 60 * 1000).start(); // every min
   rafInterval(showObservations, 2 * 60 * 1000).start(); // every 2 mins
