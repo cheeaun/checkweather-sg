@@ -318,7 +318,7 @@ const showObservations = () => {
         'text-halo-color': '#000',
         'text-halo-width': 1,
       },
-    }, 'tempreadings');
+    }, 'rainclouds');
     map.addLayer({
       id: 'rainreadings',
       type: 'symbol',
@@ -340,7 +340,7 @@ const showObservations = () => {
         'text-halo-color': '#000',
         'text-halo-width': 1,
       },
-    }, 'humidreadings');
+    }, 'rainclouds');
     map.loadImage(arrowPath, (e, image) => {
       if (e) return;
       map.addImage('arrow', image, { sdf: true });
