@@ -1,24 +1,22 @@
 import arrowPath from './assets/arrow-down.png';
-import haversine from 'new-point-haversine';
 
-const center = [103.972583, 1.349110];
-const { lowerLat, upperLat } = haversine.getLatitudeBounds(center[1], 70, 'km');
-const { lowerLong, upperLong } = haversine.getLongitudeBounds(center[1], center[0], 70, 'km');
+const center = [103.8475, 1.3011];
+const lowerLat = 1.1450, upperLat = 1.4572, lowerLong = 103.565, upperLong = 104.130;
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlZWF1biIsImEiOiIwMTkyNjRiOWUzOTMyZThkYTE3YjMyMWFiZGU2OTZlNiJ9.XsOEKtyctGiNGNsmVhetYg';
 if (window.$map) window.$map.remove();
 const map = window.$map = new mapboxgl.Map({
   container: 'map',
-  maxBounds: [lowerLong, lowerLat, upperLong, upperLat], // w,s,e,n
+  center,
   style: 'mapbox://styles/mapbox/dark-v9?optimize=true',
   logoPosition: 'top-right',
+  minZoom: 8,
   maxZoom: 14,
   renderWorldCopies: false,
   boxZoom: false,
   attributionControl: false,
 });
-const sgCenter = [103.821842, 1.349139];
-map.setCenter(sgCenter);
+map.fitBounds([lowerLong, lowerLat, upperLong, upperLat], { animate: false });
 
 // Controls
 map.addControl(new mapboxgl.AttributionControl({
