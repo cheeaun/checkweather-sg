@@ -232,8 +232,8 @@ const showRain = () => {
           'fill-extrusion-height': 5000,
           'fill-extrusion-opacity': [
             'interpolate', ['linear'], ['zoom'],
-            12, .15,
-            14, 0
+            12, .2,
+            14, .03
           ],
         },
       }, 'rainclouds');
