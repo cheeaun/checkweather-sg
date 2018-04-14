@@ -1,4 +1,5 @@
 import arrowPath from './assets/arrow-down.png';
+import rainDrops from './assets/rain.png';
 
 const center = [103.8475, 1.3011];
 const lowerLat = 1.1450, upperLat = 1.4572, lowerLong = 103.565, upperLong = 104.130;
@@ -87,6 +88,7 @@ class CloudsModeControl {
         map.setLayoutProperty('rain3d', 'visibility', 'none');
         map.setLayoutProperty('rainlay', 'visibility', 'none');
         map.setLayoutProperty('rainclouds', 'visibility', 'visible');
+        map.setLayoutProperty('raindrops', 'visibility', 'visible');
         map.setLayoutProperty('raincloudshadows', 'visibility', 'visible');
         map.easeTo({
           pitch: 60,
@@ -96,6 +98,7 @@ class CloudsModeControl {
         map.setLayoutProperty('rain3d', 'visibility', pitch > 0 ? 'visible' : 'none');
         map.setLayoutProperty('rainlay', 'visibility', pitch > 0 ? 'none' : 'visible');
         map.setLayoutProperty('rainclouds', 'visibility', 'none');
+        map.setLayoutProperty('raindrops', 'visibility', 'none');
         map.setLayoutProperty('raincloudshadows', 'visibility', 'none');
       }
     };
@@ -142,7 +145,6 @@ const genReadingsGeoJSON = (data) => {
   };
 }
 
-let um;
 const sources = {
   rain: 'https://api.checkweather.sg/now',
   rainfall: 'https://api.data.gov.sg/v1/environment/rainfall',
@@ -151,21 +153,14 @@ const sources = {
   wind: 'https://api.data.gov.sg/v1/environment/wind-direction',
 };
 
-const showRain = () => {
-  const newUM = uniqMinute();
-  if (um === newUM) return;
-  um = newUM;
-  console.log('UM', um);
+const $loader = document.getElementById('loader');
+map.on('sourcedataloading', () => $loader.hidden = false);
+map.on('sourcedata', () => $loader.hidden = true);
 
+const showRain = () => {
   const rainSource = map.getSource('rainsource');
   if (rainSource){
     rainSource.setData(sources.rain);
-    fetch(sources.rainfall)
-      .then(r => r.json())
-      .then(data => {
-        map.getSource('rainmm').setData(genReadingsGeoJSON(data));
-      })
-      .catch(_=>_);
   } else {
     map.addSource('rainsource', {
       type: 'geojson',
@@ -223,21 +218,42 @@ const showRain = () => {
         'fill-extrusion-base': 5000,
       },
     });
-    map.addLayer({
-      id: 'raincloudshadows',
-      type: 'fill',
-      source: 'rainsource',
-      layout: {
-        visibility: 'none',
-      },
-      paint: {
-        'fill-antialias': false,
-        'fill-opacity': [
-          'interpolate', ['linear'], ['zoom'],
-          8, 1,
-          14, ['/', ['get', 'intensity'], 100]
-        ],
-      },
+    map.loadImage(rainDrops, (e, image) => {
+      if (e) throw e;
+      map.addImage('rain', image);
+      map.addLayer({
+        id: 'raindrops',
+        type: 'fill-extrusion',
+        source: 'rainsource',
+        layout: {
+          visibility: 'none',
+        },
+        paint: {
+          'fill-extrusion-pattern': 'rain',
+          'fill-extrusion-height': 5000,
+          'fill-extrusion-opacity': [
+            'interpolate', ['linear'], ['zoom'],
+            12, .15,
+            14, 0
+          ],
+        },
+      }, 'rainclouds');
+      map.addLayer({
+        id: 'raincloudshadows',
+        type: 'fill',
+        source: 'rainsource',
+        layout: {
+          visibility: 'none',
+        },
+        paint: {
+          'fill-antialias': false,
+          'fill-opacity': [
+            'interpolate', ['linear'], ['zoom'],
+            8, .5,
+            14, ['*', ['/', ['get', 'intensity'], 100], .5]
+          ],
+        },
+      }, 'raindrops');
     });
 
     let currentPitch = -1;
@@ -249,34 +265,46 @@ const showRain = () => {
       map.setLayoutProperty('rain3d', 'visibility', pitch > 0 ? 'visible' : 'none');
       map.setLayoutProperty('rainlay', 'visibility', pitch > 0 ? 'none' : 'visible');
     });
+  }
+};
 
+const showRainfall = () => {
+  const hasRainMMSource = map.getSource('rainmm');
+  if (hasRainMMSource){
     fetch(sources.rainfall)
-    .then(r => r.json())
-    .then((rainfallData) => {
-      map.addSource('rainmm', {
-        type: 'geojson',
-        data: genReadingsGeoJSON(rainfallData),
+      .then(r => r.json())
+      .then(data => {
+        map.getSource('rainmm').setData(genReadingsGeoJSON(data));
+      })
+      .catch(_=>_);
+  } else {
+    fetch(sources.rainfall)
+      .then(r => r.json())
+      .then((rainfallData) => {
+        map.addSource('rainmm', {
+          type: 'geojson',
+          data: genReadingsGeoJSON(rainfallData),
+        });
+        map.addLayer({
+          id: 'rainreadings',
+          type: 'symbol',
+          source: 'rainmm',
+          filter: ['!=', 'reading', 0],
+          layout: {
+            'text-field': '{reading}',
+            'text-size': [
+              'interpolate', ['linear'], ['zoom'],
+              8, ['zoom'],
+              14, ['*', 1.5, ['zoom']]
+            ],
+          },
+          paint: {
+            'text-color': 'aqua',
+            'text-halo-color': '#000',
+            'text-halo-width': 1,
+          },
+        }, 'rainclouds');
       });
-      map.addLayer({
-        id: 'rainreadings',
-        type: 'symbol',
-        source: 'rainmm',
-        filter: ['!=', 'reading', 0],
-        layout: {
-          'text-field': '{reading}',
-          'text-size': [
-            'interpolate', ['linear'], ['zoom'],
-            8, ['zoom'],
-            14, ['*', 1.5, ['zoom']]
-          ],
-        },
-        paint: {
-          'text-color': 'aqua',
-          'text-halo-color': '#000',
-          'text-halo-width': 1,
-        },
-      }, 'rainclouds');
-    });
   }
 };
 
@@ -419,8 +447,9 @@ map.on('load', function(){
     }
   }
 
-  rafInterval(showRain, 2 * 60 * 1000).start(); // every 2 mins
-  rafInterval(showWeather, 60 * 1000).start(); // every min
+  rafInterval(showRain, 60 * 1000).start(); // every min
+  rafInterval(showWeather, 2 * 60 * 1000).start(); // every 2 mins
+  rafInterval(showRainfall, 5 * 60 * 1000).start(); // every 5 mins
 });
 
 // https://stackoverflow.com/a/21829819/20838
