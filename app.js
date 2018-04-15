@@ -147,7 +147,7 @@ const genReadingsGeoJSON = (data) => {
 
 const sources = {
   rain: 'https://api.checkweather.sg/now',
-  observations: 'https://api.checkweather.sg/observations',
+  observations: 'https://api.checkweather.sg/observations?compact=1',
 };
 
 const $loader = document.getElementById('loader');
