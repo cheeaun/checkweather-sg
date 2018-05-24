@@ -148,16 +148,28 @@ const genReadingsGeoJSON = (data) => {
   };
 }
 
+const HOST = 'https://api.checkweather.sg';
 const sources = {
-  rain: 'https://api.checkweather.sg/now',
-  observations: 'https://api.checkweather.sg/observations?compact=1',
+  rain: HOST + '/now',
+  id: HOST + '/now-id',
+  observations: HOST + '/observations?compact=1',
 };
+
+const $datetime = document.getElementById('datetime');
 
 const $loader = document.getElementById('loader');
 map.on('sourcedataloading', (e) => {
-  if (e.source.type !== 'vector') $loader.hidden = false;
+  if (e.source.type !== 'vector'){
+    $loader.hidden = false;
+    $datetime.hidden = true;
+  }
 });
-map.on('sourcedata', () => $loader.hidden = true);
+map.on('sourcedata', (e) => {
+  if (e.source.type !== 'vector'){
+    $loader.hidden = true;
+    $datetime.hidden = false;
+  }
+});
 
 const showRain = () => {
   const rainSource = map.getSource('rainsource');
@@ -268,6 +280,19 @@ const showRain = () => {
       map.setLayoutProperty('rainlay', 'visibility', pitch > 0 ? 'none' : 'visible');
     });
   }
+
+  setTimeout(() => {
+    fetch(sources.id).then((res) => res.text()).then((id) => {
+      const html = (id.match(/\d{4}$/) || [''])[0].replace(/(\d{2})(\d{2})/, (m, m1, m2) => {
+        let h = parseInt(m1, 10);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        if (h == 0) h = 12;
+        if (h > 12) h -= 12;
+        return h + '<blink>:</blink>' + m2 + ' ' + ampm;
+      });
+      $datetime.innerHTML = html;
+    });
+  }, 1000);
 };
 
 const showObservations = () => {

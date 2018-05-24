@@ -45,6 +45,31 @@ h1 {
   100% { transform: rotate(1turn) }
 }
 
+#datetime {
+  font-size: 14px;
+  pointer-events: none;
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  line-height: 20px;
+  color: lightskyblue;
+  text-shadow: 0 0 4px #000, 0 0 3px #000, 0 0 2px #000, 0 0 10px #fff;
+  transition: 1s opacity;
+}
+#datetime[hidden] {
+  transition-delay: .3s;
+  display: block;
+  opacity: 0;
+}
+#datetime blink {
+  animation: 2s linear infinite blink;
+}
+@keyframes blink {
+  0% { visibility: hidden }
+  50% { visibility: hidden }
+  100% { visibility: visible }
+}
+
 #legend {
   color: #fff;
   background-color: rgba(0,0,0,.5);
