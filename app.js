@@ -177,8 +177,8 @@ const showRain = () => {
         // 'fill-outline-color': 'black',
         'fill-opacity': [
           'interpolate', ['linear'], ['zoom'],
-          8, .9,
-          14, ['*', ['/', ['get', 'intensity'], 100], .3]
+          8, ['max', .3, ['*', ['/', ['get', 'intensity'], 100], 1]],
+          14, ['max', .05, ['*', ['/', ['get', 'intensity'], 100], .3]]
         ],
       },
     }, labelLayerId);
@@ -195,7 +195,7 @@ const showRain = () => {
         'fill-extrusion-color': ['get', 'color'],
         'fill-extrusion-opacity': [
           'interpolate', ['linear'], ['zoom'],
-          8, .9,
+          8, .7,
           14, .1
         ],
         'fill-extrusion-height': ['*', 50, ['get', 'intensity']],
