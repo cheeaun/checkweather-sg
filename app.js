@@ -17,7 +17,10 @@ const map = window.$map = new mapboxgl.Map({
   boxZoom: false,
   attributionControl: false,
 });
-map.fitBounds([lowerLong, lowerLat, upperLong, upperLat], { animate: false });
+map.fitBounds([lowerLong, lowerLat, upperLong, upperLat], {
+  animate: false,
+  padding: window.innerWidth > 480 && window.innerHeight > 480 ? 120 : 0,
+});
 
 // Controls
 map.addControl(new mapboxgl.AttributionControl({
