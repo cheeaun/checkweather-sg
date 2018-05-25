@@ -54,12 +54,13 @@ h1 {
   line-height: 20px;
   color: lightskyblue;
   text-shadow: 0 0 4px #000, 0 0 3px #000, 0 0 2px #000, 0 0 10px #fff;
-  transition: 1s opacity;
+  transition: .3s all;
+  transform: translateX(0);
 }
 #datetime[hidden] {
-  transition-delay: .3s;
   display: block;
   opacity: 0;
+  transform: translateX(20px);
 }
 #datetime blink {
   animation: 2s linear infinite blink;

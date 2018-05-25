@@ -158,17 +158,13 @@ const sources = {
 const $datetime = document.getElementById('datetime');
 
 const $loader = document.getElementById('loader');
-map.on('sourcedataloading', (e) => {
-  if (e.source.type !== 'vector'){
-    $loader.hidden = false;
-    $datetime.hidden = true;
-  }
+map.on('dataloading', (e) => {
+  $loader.hidden = false;
+  $datetime.hidden = true;
 });
-map.on('sourcedata', (e) => {
-  if (e.source.type !== 'vector'){
-    $loader.hidden = true;
-    $datetime.hidden = false;
-  }
+map.on('data', (e) => {
+  $loader.hidden = true;
+  $datetime.hidden = false;
 });
 
 const showRain = () => {
