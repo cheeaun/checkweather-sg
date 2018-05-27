@@ -162,9 +162,13 @@ map.on('dataloading', (e) => {
   $loader.hidden = false;
   $datetime.hidden = true;
 });
+let dataDone = null;
 map.on('data', (e) => {
-  $loader.hidden = true;
-  $datetime.hidden = false;
+  clearTimeout(dataDone);
+  dataDone = setTimeout(() => {
+    $loader.hidden = true;
+    $datetime.hidden = false;
+  }, 1000);
 });
 
 const showRain = () => {
