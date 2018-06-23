@@ -192,11 +192,11 @@ const showRain = () => {
         // 'fill-outline-color': 'black',
         'fill-opacity': [
           'interpolate', ['linear'], ['zoom'],
-          8, ['max', .3, ['*', ['/', ['get', 'intensity'], 100], 1]],
-          14, ['max', .05, ['*', ['/', ['get', 'intensity'], 100], .3]]
+          8, ['max', .5, ['*', ['/', ['get', 'intensity'], 100], 1]],
+          14, ['max', .1, ['*', ['/', ['get', 'intensity'], 100], .5]]
         ],
       },
-    }, labelLayerId);
+    }, 'water');
 
     // 3D radar
     map.addLayer({
@@ -215,7 +215,7 @@ const showRain = () => {
         ],
         'fill-extrusion-height': ['*', 50, ['get', 'intensity']],
       },
-    }, labelLayerId);
+    }, 'water');
 
     // 3D clouds
     map.addLayer({
@@ -393,7 +393,7 @@ const showObservations = () => {
           },
           paint: {
             'icon-color': '#fff',
-            'icon-opacity': .2,
+            'icon-opacity': .3,
           },
         }, 'tempreadings');
       }, 300);
@@ -428,6 +428,10 @@ map.on('load', function(){
       break;
     }
   }
+
+  // Make water layer see-through
+  map.moveLayer('water', labelLayerId);
+  map.setPaintProperty('water', 'fill-opacity', .5);
 
   // Mask the area outside Singapore
   map.addLayer({
