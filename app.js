@@ -312,6 +312,7 @@ const showObservations = () => {
       layout: {
         'text-field': '{temp_celcius}°',
         'text-allow-overlap': true,
+        'text-ignore-placement': true,
         'text-size': [
           'interpolate', ['linear'], ['zoom'],
           8, ['zoom'],
@@ -329,10 +330,11 @@ const showObservations = () => {
       id: 'humidreadings',
       type: 'symbol',
       source: 'observations',
-      minzoom: 10,
+      minzoom: 9,
       filter: ['all', ['has', 'relative_humidity'], ['>', 'relative_humidity', 0]],
       layout: {
         'text-field': '{relative_humidity}%',
+        'text-ignore-placement': true,
         'text-size': [
           'interpolate', ['linear'], ['zoom'],
           8, ['zoom'],
@@ -351,7 +353,7 @@ const showObservations = () => {
       id: 'rainreadings',
       type: 'symbol',
       source: 'observations',
-      minzoom: 12,
+      minzoom: 11,
       filter: ['all', ['has', 'rain_mm'], ['>', 'rain_mm', 0]],
       layout: {
         'text-field': '{rain_mm}',
@@ -360,6 +362,7 @@ const showObservations = () => {
           8, ['zoom'],
           14, ['zoom']
         ],
+        'text-ignore-placement': true,
         'text-offset': [0, 1.1],
         'text-padding': 0,
       },
