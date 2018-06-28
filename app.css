@@ -36,7 +36,6 @@ h1 {
   filter: drop-shadow(0 0 2px #fff);
 }
 #loader[hidden] {
-  transition-delay: 1s;
   display: block;
   opacity: 0;
 }
@@ -55,13 +54,11 @@ h1 {
   color: lightskyblue;
   text-shadow: 0 0 4px #000, 0 0 3px #000, 0 0 2px #000, 0 0 10px #fff;
   transition: .3s all;
-  transition-delay: 1.2s;
   transform: translateX(0);
 }
 #datetime[hidden] {
   display: block;
   opacity: 0;
-  transition-delay: 0s;
   transform: translateX(24px);
 }
 #datetime blink {
