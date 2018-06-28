@@ -421,6 +421,7 @@ const rafInterval = (fn, delay) => {
 let labelLayerId;
 map.on('load', function(){
   const layers = map.getStyle().layers;
+  // console.log(layers);
   // Find the index of the first symbol layer in the map style
   for (let i=0; i<layers.length; i++){
     if (layers[i].type === 'symbol' && layers[i].layout['text-field']){
@@ -432,6 +433,18 @@ map.on('load', function(){
   // Make water layer see-through
   map.moveLayer('water', labelLayerId);
   map.setPaintProperty('water', 'fill-opacity', .5);
+
+  setTimeout(() => {
+    const layers = map.getStyle().layers;
+    layers.forEach(layer => {
+      if (layer.type === 'symbol' && layer.layout['text-field'] && /place\-city/i.test(layer.id)){
+        const opacity = map.getPaintProperty(layer.id, 'text-opacity');
+        if (!opacity || opacity > .5){
+          map.setPaintProperty(layer.id, 'text-opacity', .5);
+        }
+      }
+    });
+  }, 2000);
 
   // Mask the area outside Singapore
   map.addLayer({
