@@ -323,7 +323,7 @@ const showObservations = () => {
       paint: {
         'text-color': 'yellow',
         'text-halo-color': '#000',
-        'text-halo-width': 1,
+        'text-halo-width': 1.5,
       },
     }, 'rainclouds');
     map.addLayer({
@@ -338,7 +338,7 @@ const showObservations = () => {
         'text-size': [
           'interpolate', ['linear'], ['zoom'],
           8, ['zoom'],
-          14, ['zoom']
+          14, ['*', 1.1, ['zoom']]
         ],
         'text-offset': [0, -1.1],
         'text-padding': 0,
@@ -346,7 +346,7 @@ const showObservations = () => {
       paint: {
         'text-color': 'orange',
         'text-halo-color': '#000',
-        'text-halo-width': 1,
+        'text-halo-width': 1.5,
       },
     }, 'rainclouds');
     map.addLayer({
@@ -360,7 +360,7 @@ const showObservations = () => {
         'text-size': [
           'interpolate', ['linear'], ['zoom'],
           8, ['zoom'],
-          14, ['zoom']
+          14, ['*', 1.1, ['zoom']]
         ],
         'text-ignore-placement': true,
         'text-offset': [0, 1.1],
@@ -369,7 +369,7 @@ const showObservations = () => {
       paint: {
         'text-color': 'aqua',
         'text-halo-color': '#000',
-        'text-halo-width': 1,
+        'text-halo-width': 1.5,
       },
     }, 'rainclouds');
     map.loadImage(arrowPath, (e, image) => {
