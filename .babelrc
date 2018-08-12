@@ -1,0 +1,9 @@
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": "defaults, not ie <999, not Android < 999"
+      }
+    }]
+  ]
+}

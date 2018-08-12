@@ -1,3 +1,4 @@
+import mapboxgl from 'mapbox-gl';
 import arrowPath from './assets/arrow-down.png';
 import rainDrops from './assets/rain.png';
 

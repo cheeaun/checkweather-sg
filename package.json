@@ -18,8 +18,11 @@
   ],
   "author": "Lim Chee Aun",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "mapbox-gl": "~0.47.0"
+  },
   "devDependencies": {
+    "babel-preset-react": "~6.24.1",
     "gh-pages": "~1.2.0",
     "parcel-bundler": "~1.9.7"
   }
