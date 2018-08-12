@@ -21,6 +21,6 @@
   "dependencies": {},
   "devDependencies": {
     "gh-pages": "~1.2.0",
-    "parcel-bundler": "~1.9.3"
+    "parcel-bundler": "~1.9.7"
   }
 }
