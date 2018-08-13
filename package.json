@@ -6,8 +6,8 @@
   "scripts": {
     "parcel": "parcel",
     "start": "parcel index.html -d tmp --no-hmr",
-    "build": "parcel build index.html",
-    "deploy": "rm -rf dist && npm run build && cp {CNAME,favicon.ico} dist && gh-pages -d dist"
+    "build": "rm -rf dist && parcel build index.html",
+    "deploy": "npm run build && cp {CNAME,favicon.ico} dist && gh-pages -d dist"
   },
   "keywords": [
     "weather",
