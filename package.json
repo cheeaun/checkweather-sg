@@ -7,7 +7,8 @@
     "parcel": "parcel",
     "start": "parcel index.html -d tmp --no-hmr",
     "build": "rm -rf dist && parcel build index.html",
-    "deploy": "npm run build && cp {CNAME,favicon.ico} dist && gh-pages -d dist"
+    "build-prod": "npm run build && cp {CNAME,favicon.ico} dist",
+    "deploy": "npm run build-prod && gh-pages -d dist"
   },
   "keywords": [
     "weather",
