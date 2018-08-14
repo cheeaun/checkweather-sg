@@ -7,7 +7,7 @@
     "parcel": "parcel",
     "start": "parcel index.html -d tmp --no-hmr",
     "build": "rm -rf dist && parcel build index.html",
-    "build-prod": "npm run build && cp {CNAME,favicon.ico} dist",
+    "build-prod": "npm run build && cpy {CNAME,favicon.ico} dist",
     "deploy": "npm run build-prod && gh-pages -d dist"
   },
   "keywords": [
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "babel-preset-es2015-ie": "~6.7.0",
+    "cpy-cli": "~2.0.0",
     "gh-pages": "~1.2.0",
     "parcel-bundler": "~1.9.7"
   }
