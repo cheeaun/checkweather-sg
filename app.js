@@ -526,3 +526,9 @@ if (window.DeviceOrientationEvent){
     $windCompasss.style.transform = `rotate(${heading-180}deg)`;
   }, false);
 }
+
+if ('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js');
+  });
+}

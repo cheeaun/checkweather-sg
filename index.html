@@ -1,29 +1,27 @@
 <!DOCTYPE html>
-<title>Check Weather SG ☀️🌧 Yet another weather app for Singapore</title>
-<meta name="description" content="Yet another weather app for Singapore">
 <meta charset="utf-8">
+<title>Check Weather SG ☀️🌧 Yet another weather app for Singapore</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<link rel="stylesheet" href="app.css">
+<meta name="description" content="Yet another weather app for Singapore">
+<link rel="preconnect" href="https://api.mapbox.com" crossorigin>
+<link rel="preconnect" href="https://a.tiles.mapbox.com" crossorigin>
+<link rel="preconnect" href="https://b.tiles.mapbox.com" crossorigin>
 <link rel="dns-prefetch" href="https://api.mapbox.com" crossorigin>
 <link rel="dns-prefetch" href="https://a.tiles.mapbox.com" crossorigin>
 <link rel="dns-prefetch" href="https://b.tiles.mapbox.com" crossorigin>
-<link rel="apple-touch-icon" sizes="57x57" href="assets/apple-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="assets/apple-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="assets/apple-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="assets/apple-icon-76x76.png">
-<link rel="apple-touch-icon" sizes="114x114" href="assets/apple-icon-114x114.png">
-<link rel="apple-touch-icon" sizes="120x120" href="assets/apple-icon-120x120.png">
-<link rel="apple-touch-icon" sizes="144x144" href="assets/apple-icon-144x144.png">
-<link rel="apple-touch-icon" sizes="152x152" href="assets/apple-icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-icon-180x180.png">
-<link rel="icon" type="image/png" sizes="192x192"  href="assets/android-icon-192x192.png">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="96x96" href="assets/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+<link rel="stylesheet" href="app.css">
+<link rel="preload" as="script" crossorigin="anonymous" href="https://cdn.polyfill.io/v2/polyfill.js?features=fetch,Element.prototype.classList">
+<link re="preload" as="script" href="app.js">
+<link rel="preload" as="fetch" href="https://api.checkweather.sg/now">
+<link rel="preload" as="fetch" href="https://api.checkweather.sg/now-id">
+<link rel="preload" as="fetch" href="https://api.checkweather.sg/observations?compact=1">
 <link rel="manifest" href="assets/manifest.webmanifest">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage" content="assets/ms-icon-144x144.png">
-<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/png" sizes="192x192"  href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Check Weather SG">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#343332">
 <h1>Check Weather SG</h1>
 <div id="map"></div>
 <div id="loader" hidden></div>
@@ -51,7 +49,7 @@
     &copy; <a href="http://www.nea.gov.sg/open-data-licence/" target="_blank" title="National Environment Agency">NEA</a>
   </footer>
 </div>
-<script src="https://cdn.polyfill.io/v2/polyfill.js?features=fetch,Element.prototype.classList"></script>
+<script crossorigin="anonymous" src="https://cdn.polyfill.io/v2/polyfill.js?features=fetch,Element.prototype.classList"></script>
 <script src="app.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23235796-10"></script>
