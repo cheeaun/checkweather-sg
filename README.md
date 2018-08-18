@@ -16,6 +16,8 @@ After few trials and errors, I cooked up the [`Rain GeoJSON SG`](https://github.
 
 Since I've gone this far, so I thought "why not?", let's build yet another weather app for Singapore! Thus this project *just happens*.
 
+**👉 Read more: [Building Check Weather SG](http://cheeaun.com/blog/2018/06/building-check-weather-sg/).**
+
 Technicalities
 ---
 
