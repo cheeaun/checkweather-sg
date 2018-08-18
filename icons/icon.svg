@@ -1,1 +1,30 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><rect x="0" y="0" width="512" height="512" style="fill:url(#_Linear1);"/><path d="M216.002,60.946c35.802,0.231 71.337,15.958 95.664,42.748c0,0 2.926,-0.561 5.28,-1.097c30.062,-6.843 63.509,3.191 84.866,25.853c15.911,16.883 24.764,40.041 24.284,63.347c0,0 3.159,1.697 5.641,3.175c29.62,17.641 50.283,49.787 53.716,84.308c3.592,36.126 -11.868,73.568 -39.833,96.646c-19.583,16.16 -44.703,25.232 -70.226,25.354c-76.415,0.116 -152.83,0.134 -229.244,0c-57.09,-0.302 -109.638,-44.03 -118.704,-102.111c-7.263,-46.521 14.741,-96.005 55.982,-121.411c1.28,-0.788 3.123,-1.859 3.123,-1.859c0.05,-0.444 0.104,-0.887 0.158,-1.331c5.959,-47.406 40.132,-90.558 86.385,-106.539c13.777,-4.76 28.497,-7.114 42.908,-7.083Z" style="fill:#1d1b13;fill-rule:nonzero;"/><path d="M146.55,209.395c32.409,0 196.079,0 228.488,0c44.684,0 80.962,36.269 80.962,80.943c0,44.673 -36.278,80.942 -80.962,80.942c-30.512,0 -197.976,0 -228.488,0c-44.684,0 -80.962,-36.269 -80.962,-80.942c0,-44.674 36.278,-80.943 80.962,-80.943Z" style="fill:url(#_Linear2);"/><ellipse cx="336.807" cy="189.672" rx="59.314" ry="59.3" style="fill:url(#_Linear3);"/><ellipse cx="215.438" cy="190.641" rx="99.72" ry="99.696" style="fill:url(#_Linear4);"/><ellipse cx="146.55" cy="280.48" rx="90.55" ry="90.575" style="fill:url(#_Linear5);"/><defs><linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(3.1351e-14,512,-512,3.1351e-14,115.718,0)"><stop offset="0" style="stop-color:#343332;stop-opacity:1"/><stop offset="1" style="stop-color:#111b1f;stop-opacity:1"/></linearGradient><linearGradient id="_Linear2" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-101.68,-161.66,161.66,-101.68,357.68,371.055)"><stop offset="0" style="stop-color:#0ff;stop-opacity:1"/><stop offset="1" style="stop-color:#1b8a42;stop-opacity:1"/></linearGradient><linearGradient id="_Linear3" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-118.628,1.45277e-14,-1.45277e-14,-118.628,396.121,189.672)"><stop offset="0" style="stop-color:#34df41;stop-opacity:1"/><stop offset="1" style="stop-color:#e9e336;stop-opacity:1"/></linearGradient><linearGradient id="_Linear4" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-199.441,2.44244e-14,-2.44244e-14,-199.441,315.159,190.641)"><stop offset="0" style="stop-color:#ff0;stop-opacity:1"/><stop offset="1" style="stop-color:#fba420;stop-opacity:1"/></linearGradient><linearGradient id="_Linear5" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-181.1,2.21784e-14,-2.21784e-14,-181.1,237.1,280.48)"><stop offset="0" style="stop-color:#ffa500;stop-opacity:1"/><stop offset="1" style="stop-color:#fa4231;stop-opacity:1"/></linearGradient></defs></svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.4" clip-rule="evenodd" viewBox="0 0 512 512">
+  <path fill="url(#_Linear1)" d="M0 0h512v512H0z"/>
+  <path fill="#1d1b13" fill-rule="nonzero" d="M216 85.8a132 132 0 0 1 95.6 42.7l5.3-1a91 91 0 0 1 84.9 25.8c15.9 16.9 24.8 40 24.3 63.3l5.6 3.2a112.8 112.8 0 0 1 53.7 84.3 113 113 0 0 1-39.8 96.7 111.9 111.9 0 0 1-70.2 25.3c-76.4.1-152.9.2-229.3 0-57-.3-109.6-44-118.7-102-7.2-46.6 14.8-96.1 56-121.5l3.1-1.9.2-1.3c6-47.4 40.1-90.6 86.4-106.5 13.8-4.8 28.5-7.1 42.9-7.1z"/>
+  <path fill="url(#_Linear2)" d="M146.5 234.2H375a81 81 0 0 1 0 162H146.5a81 81 0 0 1 0-162z"/>
+  <ellipse cx="336.8" cy="214.5" fill="url(#_Linear3)" rx="59.3" ry="59.3"/>
+  <ellipse cx="215.4" cy="215.5" fill="url(#_Linear4)" rx="99.7" ry="99.7"/>
+  <ellipse cx="146.5" cy="305.3" fill="url(#_Linear5)" rx="90.5" ry="90.6"/>
+  <defs>
+    <linearGradient id="_Linear1" x2="1" gradientTransform="matrix(0 512 -512 0 115.7 0)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#343332"/>
+      <stop offset="1" stop-color="#111b1f"/>
+    </linearGradient>
+    <linearGradient id="_Linear2" x2="1" gradientTransform="rotate(-122.2 288.2 99.2) scale(190.98)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0ff"/>
+      <stop offset="1" stop-color="#1b8a42"/>
+    </linearGradient>
+    <linearGradient id="_Linear3" x2="1" gradientTransform="rotate(180 198 107.3) scale(118.628)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#34df41"/>
+      <stop offset="1" stop-color="#e9e336"/>
+    </linearGradient>
+    <linearGradient id="_Linear4" x2="1" gradientTransform="rotate(180 157.6 107.7) scale(199.441)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff0"/>
+      <stop offset="1" stop-color="#fba420"/>
+    </linearGradient>
+    <linearGradient id="_Linear5" x2="1" gradientTransform="matrix(-181.1 0 0 -181.1 237 305.3)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="orange"/>
+      <stop offset="1" stop-color="#fa4231"/>
+    </linearGradient>
+  </defs>
+</svg>
