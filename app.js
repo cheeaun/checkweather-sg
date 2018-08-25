@@ -6,6 +6,11 @@ import iconSVGPath from './icons/icon-standalone.svg';
 const center = [103.8475, 1.3011];
 const lowerLat = 1.156, upperLat = 1.475, lowerLong = 103.565, upperLong = 104.130;
 
+const isImmersive = location.hash == '#immersive';
+if (isImmersive){
+  document.body.classList.add('immersive');
+}
+
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlZWF1biIsImEiOiIwMTkyNjRiOWUzOTMyZThkYTE3YjMyMWFiZGU2OTZlNiJ9.XsOEKtyctGiNGNsmVhetYg';
 if (window.$map) window.$map.remove();
 const map = window.$map = new mapboxgl.Map({
@@ -18,10 +23,11 @@ const map = window.$map = new mapboxgl.Map({
   renderWorldCopies: false,
   boxZoom: false,
   attributionControl: false,
+  preserveDrawingBuffer: isImmersive,
 });
 map.fitBounds([lowerLong, lowerLat, upperLong, upperLat], {
   animate: false,
-  padding: window.innerWidth > 480 && window.innerHeight > 480 ? 120 : 0,
+  padding: window.innerWidth > 480 && window.innerHeight > 480 && !isImmersive ? 120 : 0,
 });
 
 // Controls
