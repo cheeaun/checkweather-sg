@@ -1,6 +1,7 @@
 import mapboxgl from 'mapbox-gl';
 import arrowPath from './assets/arrow-down.png';
 import rainDrops from './assets/rain.png';
+import iconSVGPath from './icons/icon-standalone.svg';
 
 const center = [103.8475, 1.3011];
 const lowerLat = 1.156, upperLat = 1.475, lowerLong = 103.565, upperLong = 104.130;
@@ -531,4 +532,26 @@ if ('serviceWorker' in navigator){
   window.addEventListener('load', function(){
     navigator.serviceWorker.register('./sw.js');
   });
+}
+
+const isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') !== -1;
+if (isSafari){
+  setTimeout(function(){
+    const ratio = window.devicePixelRatio;
+    const canvas = document.createElement('canvas');
+    const w = canvas.width = window.screen.width * ratio;
+    const h = canvas.height = window.screen.height * ratio;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#343332';
+    ctx.fillRect(0, 0, w, h);
+    const icon = new Image();
+    icon.onload = () => {
+      const aspectRatio = icon.width / icon.height;
+      icon.width = w/2;
+      icon.height = w/2/aspectRatio;
+      ctx.drawImage(icon, (w - icon.width)/2, (h - icon.height)/2, icon.width, icon.height);
+      document.head.insertAdjacentHTML('beforeend', `<link rel="apple-touch-startup-image" href="${canvas.toDataURL()}">`);
+    };
+    icon.src = iconSVGPath;
+  }, 5000);
 }
