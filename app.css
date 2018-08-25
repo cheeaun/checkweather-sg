@@ -4,6 +4,7 @@
   box-sizing: border-box;
 }
 html, body {
+  -webkit-text-size-adjust: 100%;
   overflow: hidden;
   margin: 0;
   padding: 0;
