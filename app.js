@@ -29,6 +29,7 @@ const map = window.$map = new mapboxgl.Map({
   interactive: !isImmersive,
   maxTileCacheSize: isImmersive ? 0 : null,
   fadeDuration: isImmersive ? 0 : 300,
+  trackResize: !isImmersive,
 });
 map.fitBounds([lowerLong, lowerLat, upperLong, upperLat], {
   animate: false,
