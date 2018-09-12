@@ -208,6 +208,10 @@ h1 {
   100% { transform: translateY(0) }
 }
 
+.immersive {
+  pointer-events: none;
+}
+
 .immersive .mapboxgl-control-container,
 .immersive #loader,
 .immersive #legend{

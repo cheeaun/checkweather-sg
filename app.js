@@ -9,6 +9,9 @@ const lowerLat = 1.156, upperLat = 1.475, lowerLong = 103.565, upperLong = 104.1
 const isImmersive = location.hash == '#immersive';
 if (isImmersive){
   document.body.classList.add('immersive');
+  // Disable tracking
+  // https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
+  window['ga-disable-UA-23235796-10'] = true;
 }
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlZWF1biIsImEiOiIwMTkyNjRiOWUzOTMyZThkYTE3YjMyMWFiZGU2OTZlNiJ9.XsOEKtyctGiNGNsmVhetYg';
@@ -23,7 +26,9 @@ const map = window.$map = new mapboxgl.Map({
   renderWorldCopies: false,
   boxZoom: false,
   attributionControl: false,
-  preserveDrawingBuffer: isImmersive,
+  interactive: !isImmersive,
+  maxTileCacheSize: isImmersive ? 0 : null,
+  fadeDuration: isImmersive ? 0 : 300,
 });
 map.fitBounds([lowerLong, lowerLat, upperLong, upperLat], {
   animate: false,
@@ -31,16 +36,18 @@ map.fitBounds([lowerLong, lowerLat, upperLong, upperLat], {
 });
 
 // Controls
-map.addControl(new mapboxgl.AttributionControl({
-  compact: true
-}), 'top-right');
-map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-map.addControl(new mapboxgl.GeolocateControl({
-  positionOptions: {
-    enableHighAccuracy: true,
-  },
-  trackUserLocation: true,
-}));
+if (!isImmersive){
+  map.addControl(new mapboxgl.AttributionControl({
+    compact: true
+  }), 'top-right');
+  map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+  map.addControl(new mapboxgl.GeolocateControl({
+    positionOptions: {
+      enableHighAccuracy: true,
+    },
+    trackUserLocation: true,
+  }));
+}
 
 // Pitch control
 class PitchControl {
@@ -206,87 +213,96 @@ const showRain = () => {
       },
     }, 'water');
 
-    // 3D radar
-    map.addLayer({
-      id: 'rain3d',
-      type: 'fill-extrusion',
-      source: 'rainsource',
-      layout: {
-        visibility: 'none',
-      },
-      paint: {
-        'fill-extrusion-color': ['get', 'color'],
-        'fill-extrusion-opacity': [
-          'interpolate', ['linear'], ['zoom'],
-          8, .7,
-          14, .1
-        ],
-        'fill-extrusion-height': ['*', 50, ['get', 'intensity']],
-      },
-    }, 'water');
-
-    // 3D clouds
-    map.addLayer({
-      id: 'rainclouds',
-      type: 'fill-extrusion',
-      source: 'rainsource',
-      layout: {
-        visibility: 'none',
-      },
-      paint: {
-        'fill-extrusion-color': '#fff',
-        'fill-extrusion-opacity': .8,
-        'fill-extrusion-height': ['+', 5200, ['*', 5, ['get', 'intensity']]],
-        'fill-extrusion-base': 5000,
-      },
-    });
-    map.loadImage(rainDrops, (e, image) => {
-      if (e) throw e;
-      map.addImage('rain', image);
+    if (!isImmersive){
+      // 3D radar
       map.addLayer({
-        id: 'raindrops',
+        id: 'rain3d',
         type: 'fill-extrusion',
         source: 'rainsource',
         layout: {
           visibility: 'none',
         },
         paint: {
-          'fill-extrusion-pattern': 'rain',
-          'fill-extrusion-height': 5000,
+          'fill-extrusion-color': ['get', 'color'],
           'fill-extrusion-opacity': [
             'interpolate', ['linear'], ['zoom'],
-            12, .2,
-            14, .03
+            8, .7,
+            14, .1
           ],
+          'fill-extrusion-height': ['*', 50, ['get', 'intensity']],
         },
-      }, 'rainclouds');
+      }, 'water');
+
+      // 3D clouds
       map.addLayer({
-        id: 'raincloudshadows',
-        type: 'fill',
+        id: 'rainclouds',
+        type: 'fill-extrusion',
         source: 'rainsource',
         layout: {
           visibility: 'none',
         },
         paint: {
-          'fill-antialias': false,
-          'fill-opacity': [
-            'interpolate', ['linear'], ['zoom'],
-            8, .5,
-            14, ['*', ['/', ['get', 'intensity'], 100], .5]
-          ],
+          'fill-extrusion-color': '#fff',
+          'fill-extrusion-opacity': .8,
+          'fill-extrusion-height': ['+', 5200, ['*', 5, ['get', 'intensity']]],
+          'fill-extrusion-base': 5000,
         },
-      }, 'raindrops');
-    });
+      });
+      map.loadImage(rainDrops, (e, image) => {
+        if (e) throw e;
+        map.addImage('rain', image);
+        map.addLayer({
+          id: 'raindrops',
+          type: 'fill-extrusion',
+          source: 'rainsource',
+          layout: {
+            visibility: 'none',
+          },
+          paint: {
+            'fill-extrusion-pattern': 'rain',
+            'fill-extrusion-height': 5000,
+            'fill-extrusion-opacity': [
+              'interpolate', ['linear'], ['zoom'],
+              12, .2,
+              14, .03
+            ],
+          },
+        }, 'rainclouds');
+        map.addLayer({
+          id: 'raincloudshadows',
+          type: 'fill',
+          source: 'rainsource',
+          layout: {
+            visibility: 'none',
+          },
+          paint: {
+            'fill-antialias': false,
+            'fill-opacity': [
+              'interpolate', ['linear'], ['zoom'],
+              8, .5,
+              14, ['*', ['/', ['get', 'intensity'], 100], .5]
+            ],
+          },
+        }, 'raindrops');
+      });
 
-    let currentPitch = -1;
-    map.on('pitchend', () => {
-      const pitch = map.getPitch();
-      if (pitch === currentPitch) return;
-      currentPitch = pitch;
-      if (cloudsMode) return;
-      map.setLayoutProperty('rain3d', 'visibility', pitch > 0 ? 'visible' : 'none');
-      map.setLayoutProperty('rainlay', 'visibility', pitch > 0 ? 'none' : 'visible');
-    });
+      let currentPitch = -1;
+      map.on('pitchend', () => {
+        const pitch = map.getPitch();
+        if (pitch === currentPitch) return;
+        currentPitch = pitch;
+        if (cloudsMode) return;
+        map.setLayoutProperty('rain3d', 'visibility', pitch > 0 ? 'visible' : 'none');
+        map.setLayoutProperty('rainlay', 'visibility', pitch > 0 ? 'none' : 'visible');
+      });
+    } else {
+      // Dummy 'rainclouds' layer
+      map.addLayer({
+        id: 'rainclouds',
+        source: 'rainsource',
+        type: 'fill',
+      });
+    }
   }
 
   setTimeout(() => {
