@@ -302,6 +302,9 @@ const showRain = () => {
         id: 'rainclouds',
         source: 'rainsource',
         type: 'fill',
+        layout: {
+          visibility: 'none',
+        },
       });
     }
   }
