@@ -20,12 +20,12 @@
   "author": "Lim Chee Aun",
   "license": "MIT",
   "dependencies": {
-    "mapbox-gl": "~0.48.0"
+    "mapbox-gl": "~0.49.0"
   },
   "devDependencies": {
     "babel-preset-es2015-ie": "~6.7.0",
     "cpy-cli": "~2.0.0",
-    "gh-pages": "~1.2.0",
+    "gh-pages": "~2.0.0",
     "parcel-bundler": "~1.9.7"
   }
 }
