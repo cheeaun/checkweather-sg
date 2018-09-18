@@ -344,7 +344,7 @@ const showObservations = () => {
         'text-size': [
           'interpolate', ['linear'], ['zoom'],
           8, ['zoom'],
-          14, ['*', 1.5, ['zoom']]
+          14, ['*', 2, ['zoom']]
         ],
         'text-padding': 1,
       },
