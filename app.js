@@ -418,8 +418,8 @@ const showObservations = () => {
             'icon-rotation-alignment': 'map',
             'icon-size': [
               'interpolate', ['linear'], ['zoom'],
-              8, .4,
-              14, 3
+              8, .3,
+              14, 4
             ],
           },
           paint: {
