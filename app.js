@@ -358,7 +358,7 @@ const showObservations = () => {
       id: 'humidreadings',
       type: 'symbol',
       source: 'observations',
-      minzoom: 9,
+      minzoom: 10,
       filter: ['all', ['has', 'relative_humidity'], ['>', 'relative_humidity', 0]],
       layout: {
         'text-field': '{relative_humidity}%',
