@@ -474,6 +474,7 @@ map.on('load', function(){
     },
     paint: {
       'fill-color': 'rgba(0,0,0,.5)',
+      'fill-antialias': false,
     },
   }, labelLayerId);
 
