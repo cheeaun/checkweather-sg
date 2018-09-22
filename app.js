@@ -136,34 +136,6 @@ const $legend = document.getElementById('legend');
 map.on('movestart', () => $legend.classList.add('faded'));
 map.on('moveend', () => $legend.classList.remove('faded'));
 
-const uniqMinute = () => {
-  return Math.floor((new Date()).getMinutes()/5)*5;
-};
-
-const stationsMap = {};
-const genReadingsGeoJSON = (data) => {
-  data.metadata.stations.forEach(station => {
-    if (stationsMap[station.id]) return;
-    const { latitude, longitude } = station.location;
-    stationsMap[station.id] = [longitude, latitude];
-  });
-  return {
-    type: 'FeatureCollection',
-    features: data.items[0].readings.map(reading => {
-      return {
-        type: 'Feature',
-        properties: {
-          reading: reading.value,
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: stationsMap[reading.station_id],
-        },
-      }
-    }),
-  };
-}
-
 const HOST = 'https://api.checkweather.sg';
 const sources = {
   rain: HOST + '/now',
