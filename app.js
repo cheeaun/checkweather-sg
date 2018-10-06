@@ -437,17 +437,25 @@ map.on('load', function(){
   map.moveLayer('water', labelLayerId);
   map.setPaintProperty('water', 'fill-opacity', .5);
 
-  setTimeout(() => {
-    const layers = map.getStyle().layers;
+  if (isImmersive){
     layers.forEach(layer => {
-      if (layer.type === 'symbol' && layer.layout['text-field'] && /place\-city/i.test(layer.id)){
-        const opacity = map.getPaintProperty(layer.id, 'text-opacity');
-        if (!opacity || opacity > .5){
-          map.setPaintProperty(layer.id, 'text-opacity', .5);
-        }
+      if (layer.type === 'symbol' && layer.layout['text-field'] && layer.id !== labelLayerId){
+        map.removeLayer(layer.id);
       }
     });
-  }, 2000);
+  } else {
+    setTimeout(() => {
+      const layers = map.getStyle().layers;
+      layers.forEach(layer => {
+        if (layer.type === 'symbol' && layer.layout['text-field'] && /place\-city/i.test(layer.id)){
+          const opacity = map.getPaintProperty(layer.id, 'text-opacity');
+          if (!opacity || opacity > .5){
+            map.setPaintProperty(layer.id, 'text-opacity', .5);
+          }
+        }
+      });
+    }, 2000);
+  }
 
   // Mask the area outside Singapore
   map.addLayer({
