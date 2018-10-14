@@ -23,6 +23,14 @@ h1 {
   height: 100%;
 }
 
+.mapboxgl-ctrl-attrib.mapboxgl-compact {
+  min-height: 24px;
+  margin-top: 5px;
+}
+.mapboxgl-ctrl-attrib.mapboxgl-compact:not(:hover) {
+  background-color: transparent;
+}
+
 #loader {
   pointer-events: none;
   position: absolute;

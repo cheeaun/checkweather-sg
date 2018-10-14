@@ -20,7 +20,7 @@
   "author": "Lim Chee Aun",
   "license": "MIT",
   "dependencies": {
-    "mapbox-gl": "~0.50.0-beta.1"
+    "mapbox-gl": "~0.50.0"
   },
   "devDependencies": {
     "babel-preset-es2015-ie": "~6.7.0",
