@@ -14,7 +14,7 @@ if (isImmersive){
   window['ga-disable-UA-23235796-10'] = true;
 }
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlZWF1biIsImEiOiIwMTkyNjRiOWUzOTMyZThkYTE3YjMyMWFiZGU2OTZlNiJ9.XsOEKtyctGiNGNsmVhetYg';
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlZWF1biIsImEiOiJjam9weHp6MTUwZThvM3FwM3pjd2J1ZGU5In0.gW0WGZAbconHv5JYwSFI6w';
 if (window.$map) window.$map.remove();
 const map = window.$map = new mapboxgl.Map({
   container: 'map',
