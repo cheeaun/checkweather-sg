@@ -308,6 +308,8 @@ const showObservations = () => {
       id: 'tempreadings',
       type: 'symbol',
       source: 'observations',
+      tolerance: 1,
+      buffer: 0,
       filter: ['all', ['has', 'temp_celcius'], ['>', 'temp_celcius', 0]],
       layout: {
         'text-field': '{temp_celcius}°',
@@ -331,6 +333,8 @@ const showObservations = () => {
       type: 'symbol',
       source: 'observations',
       minzoom: 10,
+      tolerance: 1,
+      buffer: 0,
       filter: ['all', ['has', 'relative_humidity'], ['>', 'relative_humidity', 0]],
       layout: {
         'text-field': '{relative_humidity}%',
@@ -354,6 +358,8 @@ const showObservations = () => {
       type: 'symbol',
       source: 'observations',
       minzoom: 11,
+      tolerance: 1,
+      buffer: 0,
       filter: ['all', ['has', 'rain_mm'], ['>', 'rain_mm', 0]],
       layout: {
         'text-field': '{rain_mm}',
@@ -380,6 +386,8 @@ const showObservations = () => {
           id: 'windirections',
           type: 'symbol',
           source: 'observations',
+          tolerance: 1,
+          buffer: 0,
           filter: ['has', 'wind_direction'],
           layout: {
             'icon-image': 'arrow',
@@ -461,6 +469,8 @@ map.on('load', function(){
   map.addLayer({
     id: 'bbox',
     type: 'fill',
+    tolerance: 1,
+    buffer: 0,
     source: {
       type: 'geojson',
       data: {
