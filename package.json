@@ -20,7 +20,10 @@
   "author": "Lim Chee Aun",
   "license": "MIT",
   "dependencies": {
-    "mapbox-gl": "~0.52.0"
+    "classlist-polyfill": "~1.2.0",
+    "mapbox-gl": "~0.52.0",
+    "promise-polyfill": "~8.1.0",
+    "unfetch": "~4.0.1"
   },
   "devDependencies": {
     "babel-core": "~6.26.3",

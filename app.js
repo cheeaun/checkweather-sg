@@ -1,4 +1,8 @@
+import 'classlist-polyfill';
+import 'promise-polyfill/src/polyfill';
+import 'unfetch/polyfill/index';
 import mapboxgl from 'mapbox-gl';
+
 import arrowPath from './assets/arrow-down.png';
 import rainDrops from './assets/rain.png';
 import iconSVGPath from './icons/icon-standalone.svg';
