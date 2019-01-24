@@ -1,5 +1,4 @@
 import 'classlist-polyfill';
-import 'promise-polyfill/src/polyfill';
 import 'unfetch/polyfill/index';
 import mapboxgl from 'mapbox-gl';
 
