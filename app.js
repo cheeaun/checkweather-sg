@@ -34,11 +34,14 @@ const map = window.$map = new mapboxgl.Map({
   maxTileCacheSize: isImmersive ? 0 : null,
   fadeDuration: isImmersive ? 0 : 300,
   trackResize: !isImmersive,
+  bounds: [lowerLong, lowerLat, upperLong, upperLat],
 });
-map.fitBounds([lowerLong, lowerLat, upperLong, upperLat], {
-  animate: false,
-  padding: window.innerWidth > 480 && window.innerHeight > 480 && !isImmersive ? 120 : 0,
-});
+if (!isImmersive) {
+  map.fitBounds([lowerLong, lowerLat, upperLong, upperLat], {
+    animate: false,
+    padding: window.innerWidth > 480 && window.innerHeight > 480 ? 120 : 0,
+  });
+}
 
 // Controls
 if (!isImmersive){
@@ -160,281 +163,59 @@ map.on('data', (e) => {
   dataDone = setTimeout(() => {
     $loader.hidden = true;
     $datetime.hidden = false;
-  }, 1000);
+  }, 500);
 });
 
+const loadArrowPathP = new Promise((res, rej) => {
+  map.loadImage(arrowPath, (e, image) => {
+    e ? rej(e) : res(image);
+  });
+});
+
+const showRainID = () => {
+  fetch(sources.id).then((res) => res.text()).then((id) => {
+    const html = (id.match(/\d{4}$/) || [''])[0].replace(/(\d{2})(\d{2})/, (m, m1, m2) => {
+      let h = parseInt(m1, 10);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      if (h == 0) h = 12;
+      if (h > 12) h -= 12;
+      return h + '<blink>:</blink>' + m2 + ' ' + ampm;
+    });
+    $datetime.innerHTML = html;
+  });
+};
+
 const showRain = () => {
-  const rainSource = map.getSource('rainsource');
-  if (rainSource){
-    rainSource.setData(sources.rain);
-  } else {
-    map.addSource('rainsource', {
-      type: 'geojson',
-      data: sources.rain,
-    });
-
-    // 2D radar
-    map.addLayer({
-      id: 'rainlay',
-      type: 'fill',
-      source: 'rainsource',
-      paint: {
-        'fill-color': ['get', 'color'],
-        'fill-antialias': false,
-        // 'fill-outline-color': 'black',
-        'fill-opacity': [
-          'interpolate', ['linear'], ['zoom'],
-          8, ['max', .5, ['*', ['/', ['get', 'intensity'], 100], 1]],
-          14, ['max', .1, ['*', ['/', ['get', 'intensity'], 100], .5]]
-        ],
-      },
-    }, 'water');
-
-    if (!isImmersive){
-      // 3D radar
-      map.addLayer({
-        id: 'rain3d',
-        type: 'fill-extrusion',
-        source: 'rainsource',
-        layout: {
-          visibility: 'none',
-        },
-        paint: {
-          'fill-extrusion-color': ['get', 'color'],
-          'fill-extrusion-opacity': [
-            'interpolate', ['linear'], ['zoom'],
-            8, .7,
-            14, .1
-          ],
-          'fill-extrusion-height': ['*', 50, ['get', 'intensity']],
-        },
-      }, 'water');
-
-      // 3D clouds
-      map.addLayer({
-        id: 'rainclouds',
-        type: 'fill-extrusion',
-        source: 'rainsource',
-        layout: {
-          visibility: 'none',
-        },
-        paint: {
-          'fill-extrusion-color': '#fff',
-          'fill-extrusion-opacity': .8,
-          'fill-extrusion-height': ['+', 5200, ['*', 5, ['get', 'intensity']]],
-          'fill-extrusion-base': 5000,
-        },
-      });
-      map.loadImage(rainDrops, (e, image) => {
-        if (e) throw e;
-        map.addImage('rain', image);
-        map.addLayer({
-          id: 'raindrops',
-          type: 'fill-extrusion',
-          source: 'rainsource',
-          layout: {
-            visibility: 'none',
-          },
-          paint: {
-            'fill-extrusion-pattern': 'rain',
-            'fill-extrusion-height': 5000,
-            'fill-extrusion-opacity': [
-              'interpolate', ['linear'], ['zoom'],
-              12, .2,
-              14, .03
-            ],
-          },
-        }, 'rainclouds');
-        map.addLayer({
-          id: 'raincloudshadows',
-          type: 'fill',
-          source: 'rainsource',
-          layout: {
-            visibility: 'none',
-          },
-          paint: {
-            'fill-antialias': false,
-            'fill-opacity': [
-              'interpolate', ['linear'], ['zoom'],
-              8, .5,
-              14, ['*', ['/', ['get', 'intensity'], 100], .5]
-            ],
-          },
-        }, 'raindrops');
-      });
-
-      let currentPitch = -1;
-      map.on('pitchend', () => {
-        const pitch = map.getPitch();
-        if (pitch === currentPitch) return;
-        currentPitch = pitch;
-        if (cloudsMode) return;
-        map.setLayoutProperty('rain3d', 'visibility', pitch > 0 ? 'visible' : 'none');
-        map.setLayoutProperty('rainlay', 'visibility', pitch > 0 ? 'none' : 'visible');
-      });
-    } else {
-      // Dummy 'rainclouds' layer
-      map.addLayer({
-        id: 'rainclouds',
-        source: 'rainsource',
-        type: 'fill',
-        layout: {
-          visibility: 'none',
-        },
-      });
-    }
-  }
-
-  setTimeout(() => {
-    fetch(sources.id).then((res) => res.text()).then((id) => {
-      const html = (id.match(/\d{4}$/) || [''])[0].replace(/(\d{2})(\d{2})/, (m, m1, m2) => {
-        let h = parseInt(m1, 10);
-        const ampm = h >= 12 ? 'PM' : 'AM';
-        if (h == 0) h = 12;
-        if (h > 12) h -= 12;
-        return h + '<blink>:</blink>' + m2 + ' ' + ampm;
-      });
-      $datetime.innerHTML = html;
-    });
-  }, 1000);
+  map.getSource('rainsource').setData(sources.rain);
+  showRainID();
 };
 
 const showObservations = () => {
-  const observationsSource = map.getSource('observations');
-  if (observationsSource){
-    observationsSource.setData(sources.observations);
-  } else {
-    map.addSource('observations', {
-      type: 'geojson',
-      data: sources.observations,
-    });
-    map.addLayer({
-      id: 'tempreadings',
-      type: 'symbol',
-      source: 'observations',
-      tolerance: 1,
-      buffer: 0,
-      filter: ['all', ['has', 'temp_celcius'], ['>', 'temp_celcius', 0]],
-      layout: {
-        'text-field': '{temp_celcius}°',
-        'text-allow-overlap': true,
-        'text-ignore-placement': true,
-        'text-size': [
-          'interpolate', ['linear'], ['zoom'],
-          8, ['zoom'],
-          14, ['*', 2, ['zoom']]
-        ],
-        'text-padding': 1,
-      },
-      paint: {
-        'text-color': 'yellow',
-        'text-halo-color': '#000',
-        'text-halo-width': 1.5,
-      },
-    }, 'rainclouds');
-    map.addLayer({
-      id: 'humidreadings',
-      type: 'symbol',
-      source: 'observations',
-      minzoom: 10,
-      tolerance: 1,
-      buffer: 0,
-      filter: ['all', ['has', 'relative_humidity'], ['>', 'relative_humidity', 0]],
-      layout: {
-        'text-field': '{relative_humidity}%',
-        'text-ignore-placement': true,
-        'text-size': [
-          'interpolate', ['linear'], ['zoom'],
-          8, ['zoom'],
-          14, ['*', 1.1, ['zoom']]
-        ],
-        'text-offset': [0, -1.1],
-        'text-padding': 0,
-      },
-      paint: {
-        'text-color': 'orange',
-        'text-halo-color': '#000',
-        'text-halo-width': 1.5,
-      },
-    }, 'rainclouds');
-    map.addLayer({
-      id: 'rainreadings',
-      type: 'symbol',
-      source: 'observations',
-      minzoom: 11,
-      tolerance: 1,
-      buffer: 0,
-      filter: ['all', ['has', 'rain_mm'], ['>', 'rain_mm', 0]],
-      layout: {
-        'text-field': '{rain_mm}',
-        'text-size': [
-          'interpolate', ['linear'], ['zoom'],
-          8, ['zoom'],
-          14, ['*', 1.1, ['zoom']]
-        ],
-        'text-ignore-placement': true,
-        'text-offset': [0, 1.1],
-        'text-padding': 0,
-      },
-      paint: {
-        'text-color': 'aqua',
-        'text-halo-color': '#000',
-        'text-halo-width': 1.5,
-      },
-    }, 'rainclouds');
-    map.loadImage(arrowPath, (e, image) => {
-      if (e) return;
-      map.addImage('arrow', image, { sdf: true });
-      setTimeout(() => {
-        map.addLayer({
-          id: 'windirections',
-          type: 'symbol',
-          source: 'observations',
-          tolerance: 1,
-          buffer: 0,
-          filter: ['has', 'wind_direction'],
-          layout: {
-            'icon-image': 'arrow',
-            'icon-rotate': ['get', 'wind_direction'],
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true,
-            'icon-pitch-alignment': 'map',
-            'icon-rotation-alignment': 'map',
-            'icon-size': [
-              'interpolate', ['linear'], ['zoom'],
-              8, .3,
-              14, 4
-            ],
-          },
-          paint: {
-            'icon-color': '#fff',
-            'icon-opacity': .3,
-          },
-        }, 'tempreadings');
-      }, 300);
-    });
-  }
+  map.getSource('observations').setData(sources.observations);
 }
 
 const rafInterval = (fn, delay) => {
-  let rafint;
-  const start = () => requestAnimationFrame(() => {
+  setTimeout(requestAnimationFrame, delay, () => {
     fn();
-    fnTimeout();
+    rafInterval(fn, delay);
   });
-  const stop = () => clearTimeout(rafint);
-  const fnTimeout = () => {
-    stop();
-    rafint = setTimeout(start, delay);
-  }
-  return {
-    start,
-    stop,
-  };
 };
 
-let labelLayerId;
-map.on('load', function(){
+map.once('styledata', function(){
+  // Add sources
+  map.addSource('rainsource', {
+    type: 'geojson',
+    data: sources.rain,
+  });
+  map.addSource('observations', {
+    type: 'geojson',
+    data: sources.observations,
+  });
+  requestAnimationFrame(showRainID);
+
+  // Clean up
+
+  let labelLayerId;
   const layers = map.getStyle().layers;
   // console.log(layers);
   // Find the index of the first symbol layer in the map style
@@ -467,7 +248,243 @@ map.on('load', function(){
         }
       });
     }, 2000);
+
+    $legend.hidden = false;
   }
+
+  // 2D radar
+  map.addLayer({
+    id: 'rainlay',
+    type: 'fill',
+    source: 'rainsource',
+    tolerance: 1,
+    buffer: 0,
+    paint: {
+      'fill-color': ['get', 'color'],
+      'fill-antialias': false,
+      // 'fill-outline-color': 'black',
+      'fill-opacity': [
+        'interpolate', ['linear'], ['zoom'],
+        8, ['max', .5, ['*', ['/', ['get', 'intensity'], 100], 1]],
+        14, ['max', .1, ['*', ['/', ['get', 'intensity'], 100], .5]]
+      ],
+    },
+  }, 'water');
+
+  if (!isImmersive){
+    // 3D radar
+    map.addLayer({
+      id: 'rain3d',
+      type: 'fill-extrusion',
+      source: 'rainsource',
+      tolerance: 1,
+      buffer: 0,
+      layout: {
+        visibility: 'none',
+      },
+      paint: {
+        'fill-extrusion-color': ['get', 'color'],
+        'fill-extrusion-opacity': [
+          'interpolate', ['linear'], ['zoom'],
+          8, .7,
+          14, .1
+        ],
+        'fill-extrusion-height': ['*', 50, ['get', 'intensity']],
+      },
+    }, 'water');
+
+    // 3D clouds
+    map.addLayer({
+      id: 'rainclouds',
+      type: 'fill-extrusion',
+      source: 'rainsource',
+      tolerance: 1,
+      buffer: 0,
+      layout: {
+        visibility: 'none',
+      },
+      paint: {
+        'fill-extrusion-color': '#fff',
+        'fill-extrusion-opacity': .8,
+        'fill-extrusion-height': ['+', 5200, ['*', 5, ['get', 'intensity']]],
+        'fill-extrusion-base': 5000,
+      },
+    });
+
+    map.loadImage(rainDrops, (e, image) => {
+      map.addImage('rain', image);
+      map.addLayer({
+        id: 'raindrops',
+        type: 'fill-extrusion',
+        source: 'rainsource',
+        tolerance: 1,
+        buffer: 0,
+        layout: {
+          visibility: 'none',
+        },
+        paint: {
+          'fill-extrusion-pattern': 'rain',
+          'fill-extrusion-height': 5000,
+          'fill-extrusion-opacity': [
+            'interpolate', ['linear'], ['zoom'],
+            12, .2,
+            14, .03
+          ],
+        },
+      }, 'rainclouds');
+      map.addLayer({
+        id: 'raincloudshadows',
+        type: 'fill',
+        source: 'rainsource',
+        tolerance: 1,
+        buffer: 0,
+        layout: {
+          visibility: 'none',
+        },
+        paint: {
+          'fill-antialias': false,
+          'fill-opacity': [
+            'interpolate', ['linear'], ['zoom'],
+            8, .5,
+            14, ['*', ['/', ['get', 'intensity'], 100], .5]
+          ],
+        },
+      }, 'raindrops');
+    });
+
+    let currentPitch = -1;
+    map.on('pitchend', () => {
+      const pitch = map.getPitch();
+      if (pitch === currentPitch) return;
+      currentPitch = pitch;
+      if (cloudsMode) return;
+      map.setLayoutProperty('rain3d', 'visibility', pitch > 0 ? 'visible' : 'none');
+      map.setLayoutProperty('rainlay', 'visibility', pitch > 0 ? 'none' : 'visible');
+    });
+  } else {
+    // Dummy 'rainclouds' layer
+    map.addLayer({
+      id: 'rainclouds',
+      source: 'rainsource',
+      tolerance: 1,
+      buffer: 0,
+      type: 'fill',
+      layout: {
+        visibility: 'none',
+      },
+    });
+  }
+
+  map.addLayer({
+    id: 'tempreadings',
+    type: 'symbol',
+    source: 'observations',
+    tolerance: 1,
+    buffer: 0,
+    filter: ['all', ['has', 'temp_celcius'], ['>', 'temp_celcius', 0]],
+    layout: {
+      'text-field': '{temp_celcius}°',
+      'text-allow-overlap': true,
+      'text-ignore-placement': true,
+      'text-size': [
+        'interpolate', ['linear'], ['zoom'],
+        8, ['zoom'],
+        14, ['*', 2, ['zoom']]
+      ],
+      'text-padding': 1,
+    },
+    paint: {
+      'text-color': 'yellow',
+      'text-halo-color': '#000',
+      'text-halo-width': 1.5,
+    },
+  }, 'rainclouds');
+
+  loadArrowPathP.then(image => {
+    map.addImage('arrow', image, { sdf: true });
+    map.addLayer({
+      id: 'windirections',
+      type: 'symbol',
+      source: 'observations',
+      tolerance: 1,
+      buffer: 0,
+      filter: ['has', 'wind_direction'],
+      layout: {
+        'icon-image': 'arrow',
+        'icon-rotate': ['get', 'wind_direction'],
+        'icon-allow-overlap': true,
+        'icon-ignore-placement': true,
+        'icon-pitch-alignment': 'map',
+        'icon-rotation-alignment': 'map',
+        'icon-size': [
+          'interpolate', ['linear'], ['zoom'],
+          8, .3,
+          14, 4
+        ],
+      },
+      paint: {
+        'icon-color': '#fff',
+        'icon-opacity': .3,
+      },
+    }, 'tempreadings');
+  });
+
+  requestAnimationFrame(() => {
+    map.addLayer({
+      id: 'humidreadings',
+      type: 'symbol',
+      source: 'observations',
+      minzoom: 10,
+      tolerance: 1,
+      buffer: 0,
+      filter: ['all', ['has', 'relative_humidity'], ['>', 'relative_humidity', 0]],
+      layout: {
+        'text-field': '{relative_humidity}%',
+        'text-ignore-placement': true,
+        'text-size': [
+          'interpolate', ['linear'], ['zoom'],
+          8, ['zoom'],
+          14, ['*', 1.1, ['zoom']]
+        ],
+        'text-offset': [0, -1.1],
+        'text-padding': 0,
+      },
+      paint: {
+        'text-color': 'orange',
+        'text-halo-color': '#000',
+        'text-halo-width': 1.5,
+      },
+    }, 'rainclouds');
+
+    map.addLayer({
+      id: 'rainreadings',
+      type: 'symbol',
+      source: 'observations',
+      minzoom: 11,
+      tolerance: 1,
+      buffer: 0,
+      filter: ['all', ['has', 'rain_mm'], ['>', 'rain_mm', 0]],
+      layout: {
+        'text-field': '{rain_mm}',
+        'text-size': [
+          'interpolate', ['linear'], ['zoom'],
+          8, ['zoom'],
+          14, ['*', 1.1, ['zoom']]
+        ],
+        'text-ignore-placement': true,
+        'text-offset': [0, 1.1],
+        'text-padding': 0,
+      },
+      paint: {
+        'text-color': 'aqua',
+        'text-halo-color': '#000',
+        'text-halo-width': 1.5,
+      },
+    }, 'rainclouds');
+  });
+
+  rafInterval(showRain, 60 * 1000); // every min
+  rafInterval(showObservations, 2 * 60 * 1000); // every 2 mins
 
   // Mask the area outside Singapore
   map.addLayer({
@@ -499,9 +516,6 @@ map.on('load', function(){
       'fill-antialias': false,
     },
   }, labelLayerId);
-
-  rafInterval(showRain, 60 * 1000).start(); // every min
-  rafInterval(showObservations, 2 * 60 * 1000).start(); // every 2 mins
 });
 
 // https://stackoverflow.com/a/21829819/20838
