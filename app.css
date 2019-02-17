@@ -126,7 +126,6 @@ h1 {
 }
 
 #wind-compass {
-  filter: invert(1);
   opacity: .7;
   animation: rotate 20s linear both infinite;
 }
