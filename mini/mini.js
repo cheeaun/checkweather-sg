@@ -69,20 +69,3 @@ const showObservations = () => {
 
 showRain();
 showObservations();
-
-// fetch('https://api.checkweather.sg/now?ascii=1').then(res => res.text()).then(body => {
-//   let id, data = [];
-//   body.split('\n').forEach((line, i) => {
-//     if (i === 0){
-//       id = line;
-//     } else {
-//       for (let j=0, l=line.length; j<l; j++) {
-//         const c = line[j];
-//         if (!data[i-1]) data[i-1] = [];
-//         data[i-1].push(c.charCodeAt()-33);
-//       }
-//     }
-//   });
-//   console.log(id, data);
-
-// });
