@@ -34,16 +34,21 @@ const showRain = () => {
     }
     nowID = id;
     $datetime.visiblity = 'hidden';
+    // const path = 'https://www.weather.gov.sg/files/rainarea/50km/v2/dpsri_70km_2019021805500000dBR.dpsri.png' + '?' + (+new Date());
     const path = `https://www.weather.gov.sg/files/rainarea/50km/v2/dpsri_70km_${id}0000dBR.dpsri.png`;
     $rain.setAttribute('href', path);
     $rain.setAttribute('xlink:href', path);
     $datetime.innerHTML = timeID(id);
+    setTimeout(() => {
+      $datetime.visiblity = '';
+    }, 1000);
+    setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
   });
 }
-$rain.onload = () => {
-  setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
-  $datetime.visiblity = '';
-};
+// $rain.onload = () => {
+//   setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
+//   $datetime.visiblity = '';
+// };
 $rain.onerror = () => {
   nowID = null;
   setTimeout(requestAnimationFrame, 1000, showRain);
