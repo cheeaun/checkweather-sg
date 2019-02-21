@@ -6,7 +6,7 @@
   "scripts": {
     "parcel": "parcel",
     "start": "parcel index.html mini/index.html -d tmp --no-hmr",
-    "build": "rm -rf dist && parcel build index.html mini/index.html",
+    "build": "rm -rf dist && parcel build index.html mini/index.html --no-cache",
     "build-prod": "npm run build && cpy {CNAME,favicon.ico} dist",
     "deploy": "npm run build-prod && gh-pages -d dist"
   },
