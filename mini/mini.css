@@ -31,10 +31,9 @@ html, body {
 }
 
 #obs .t {
-  fill: yellow;
+  fill: rgba(255, 255, 0, .8);
   font-size: 12px;
   text-shadow: 0 0 5px #000, 0 0 5px #000, 0 0 5px #000, 0 0 5px #000, 0 0 5px #000, 0 0 5px #000, 0 0 5px #000;
-  opacity: .8;
 }
 #obs .w {
   opacity: .5;
