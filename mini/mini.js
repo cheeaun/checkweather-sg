@@ -27,7 +27,7 @@ const timeID = (id) => (id.match(/\d{4}$/) || [''])[0].replace(/(\d{2})(\d{2})/,
 
 let nowID;
 const showRain = () => {
-  fetch(HOST + '/now-id').then(res => res.text()).then(id => {
+  fetch(HOST + '/now-id' + (nowID ? '' : '?' + (+new Date()))).then(res => res.text()).then(id => {
     if (nowID === id){
       setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
       return;
@@ -56,7 +56,7 @@ $rain.onerror = () => {
 };
 
 const showObservations = () => {
-  fetch(HOST + '/observations?compact=1').then(res => res.json()).then(body => {
+  fetch(HOST + '/observations?compact=1' + (nowID ? '' : '&' + (+new Date()))).then(res => res.json()).then(body => {
     $obs.innerHTML = '';
     body.features.forEach(f => {
       const { coordinates } = f.geometry;
