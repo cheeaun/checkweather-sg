@@ -34,6 +34,8 @@ html, body {
   fill: rgba(255, 255, 0, .8);
   font-size: 12px;
   text-shadow: 0 0 5px #000, 0 0 5px #000, 0 0 5px #000, 0 0 5px #000, 0 0 5px #000, 0 0 5px #000, 0 0 5px #000;
+  text-anchor: middle;
+  dominant-baseline: central;
 }
 #obs .w {
   opacity: .5;
