@@ -66,7 +66,7 @@ const showObservations = () => {
         $obs.insertAdjacentHTML('beforeend', `<text class="t" x="${pos.x}" y="${pos.y}" text-anchor="middle" dominant-baseline="central">${temp_celcius}°</text>`);
       }
       if (wind_direction) {
-        $obs.insertAdjacentHTML('afterbegin', `<image class="w" x="${pos.x-20}" y="${pos.y-20}" xlink:href="${arrowDown}" width="40" height="40" transform="rotate(${wind_direction}, ${pos.x}, ${pos.y})"/>`);
+        $obs.insertAdjacentHTML('afterbegin', `<use xlink:href="#w" class="w" x="${pos.x-20}" y="${pos.y-20}" transform="rotate(${wind_direction}, ${pos.x}, ${pos.y})"/>`);
       }
     });
     setTimeout(requestAnimationFrame, 2 * 60 * 1000, showObservations); // every 2 mins

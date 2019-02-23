@@ -7,9 +7,13 @@
 <link rel="preconnect" href="https://www.weather.gov.sg" crossorigin>
 <link rel="dns-prefetch" href="https://www.weather.gov.sg" crossorigin>
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" class="flex" viewBox="0 0 400 226">
-  <image class="sg" width="400" height="226" preserveAspectRatio="none" xlink:href="./singapore.svg"/>
+  <defs>
+    <image id="sg" width="400" height="226" preserveAspectRatio="none" xlink:href="./singapore.svg"/>
+    <image id="w" xlink:href="../assets/arrow-down.svg" width="40" height="40"/>
+  </defs>
+  <use class="sg" xlink:href="#sg"/>
   <image id="rain" width="400" height="226" preserveAspectRatio="none"/>
-  <image class="sg top" width="400" height="226" preserveAspectRatio="none" xlink:href="./singapore.svg"/>
+  <use class="sg top" xlink:href="#sg"/>
   <g id="obs"></g>
   <text id="datetime" x="16" y="24"></text>
 </svg>
