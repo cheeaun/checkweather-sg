@@ -21,9 +21,9 @@
   "license": "MIT",
   "dependencies": {
     "classlist-polyfill": "~1.2.0",
-    "mapbox-gl": "~0.53.0",
+    "mapbox-gl": "~0.53.1",
     "promise-polyfill": "~8.1.0",
-    "unfetch": "~4.0.1"
+    "unfetch": "~4.1.0"
   },
   "devDependencies": {
     "babel-core": "~6.26.3",
@@ -31,6 +31,6 @@
     "babel-preset-es2015-ie": "~6.7.0",
     "cpy-cli": "~2.0.0",
     "gh-pages": "~2.0.1",
-    "parcel-bundler": "~1.11.0"
+    "parcel-bundler": "~1.12.0"
   }
 }
