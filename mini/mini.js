@@ -39,6 +39,7 @@ const showRain = () => {
     // $rain.setAttribute('href', path);
     // $rain.setAttribute('xlink:href', path);
     $rain.setAttributeNS('http://www.w3.org/1999/xlink', 'href', path);
+    $rain.classList.remove('loaded');
     $datetime.innerHTML = timeID(id);
     setTimeout(() => {
       $datetime.visiblity = '';
@@ -46,10 +47,14 @@ const showRain = () => {
     setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
   });
 }
-// $rain.onload = () => {
-//   setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
-//   $datetime.visiblity = '';
-// };
+$rain.onload = () => {
+  requestAnimationFrame(() => {
+    console.log('loaded');
+    $rain.classList.add('loaded');
+  });
+  // setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
+  // $datetime.visiblity = '';
+};
 $rain.onerror = () => {
   nowID = null;
   setTimeout(requestAnimationFrame, 1000, showRain);
