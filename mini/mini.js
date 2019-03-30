@@ -49,7 +49,7 @@ const showRain = () => {
 $rain.onload = () => {
   setTimeout(() => {
     $rain.classList.add('loaded');
-  }, 1000);
+  }, 2000);
   // setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
   // $datetime.visiblity = '';
 };
