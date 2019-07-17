@@ -22,7 +22,7 @@ if (window.$map) window.$map.remove();
 const map = window.$map = new mapboxgl.Map({
   container: 'map',
   center,
-  style: 'mapbox://styles/mapbox/dark-v9?optimize=true',
+  style: 'mapbox://styles/mapbox/dark-v10?optimize=true',
   logoPosition: 'top-right',
   minZoom: 8,
   maxZoom: 14,
