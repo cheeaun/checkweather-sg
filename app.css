@@ -1,4 +1,4 @@
-@import './node_modules/mapbox-gl/dist/mapbox-gl.css';
+@import 'https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css';
 
 * {
   box-sizing: border-box;

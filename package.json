@@ -5,8 +5,8 @@
   "main": "index.html",
   "scripts": {
     "parcel": "parcel",
-    "start": "parcel index.html mini/index.html -d tmp --no-hmr",
-    "build": "rm -rf dist && parcel build index.html mini/index.html --no-cache",
+    "start": "parcel index.html -d tmp --no-hmr",
+    "build": "rm -rf dist && parcel build index.html --no-cache",
     "build-prod": "npm run build && cpy {CNAME,favicon.ico} dist",
     "deploy": "npm run build-prod && gh-pages -d dist"
   },
@@ -19,18 +19,23 @@
   ],
   "author": "Lim Chee Aun",
   "license": "MIT",
-  "dependencies": {
-    "classlist-polyfill": "~1.2.0",
-    "mapbox-gl": "~1.1.1",
-    "promise-polyfill": "~8.1.3",
-    "unfetch": "~4.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "babel-core": "~6.26.3",
-    "babel-preset-env": "~1.7.0",
-    "babel-preset-es2015-ie": "~6.7.0",
-    "cpy-cli": "~2.0.0",
-    "gh-pages": "~2.0.1",
-    "parcel-bundler": "~1.12.3"
+    "autoprefixer": "^9.7.4",
+    "cpy-cli": "~3.0.0",
+    "gh-pages": "~2.2.0",
+    "parcel-bundler": "~1.12.4",
+    "parcel-plugin-static-files-copy": "~2.3.1",
+    "postcss-import-url": "^4.0.0"
+  },
+  "staticFiles": {
+    "staticPath": [
+      {
+        "staticPath": "mini",
+        "staticOutDir": "mini"
+      }
+    ],
+    "watcherGlob": "**",
+    "excludeGlob": "!(index.html)"
   }
 }

@@ -6,7 +6,7 @@ const lowerLat = 1.156, upperLat = 1.475, lowerLong = 103.565, upperLong = 104.1
 const longRange = upperLong - lowerLong;
 const latRange = upperLat - lowerLat;
 
-import arrowDown from '../assets/arrow-down.svg';
+// import arrowDown from '../assets/arrow-down.svg';
 
 const calcPos = (long, lat) => {
   // Note: These are inaccurate measurements.
