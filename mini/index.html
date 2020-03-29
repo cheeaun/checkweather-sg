@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check Weather SG (mini version)</title>
+<link rel="preload" as="fetch" href="https://api.checkweather.sg/v2/rainarea" crossorigin="anonymous">
+<link rel="preload" as="fetch" href="https://api.checkweather.sg/v2/observations" crossorigin="anonymous">
 <style>
 html, body {
   margin: 0;
@@ -50,9 +53,12 @@ html, body {
   fill: lightskyblue;
   text-shadow: 0 0 4px #000, 0 0 4px #000, 0 0 3px #000, 0 0 3px #000, 0 0 2px #000, 0 0 2px #000, 0 0 10px #fff;
 }
+
+canvas {
+  opacity: 0;
+  pointer-events: none;
+}
 </style>
-<link rel="preconnect" href="https://www.weather.gov.sg" crossorigin>
-<link rel="dns-prefetch" href="https://www.weather.gov.sg" crossorigin>
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" class="flex" viewBox="0 0 400 226">
   <defs>
     <svg id="sg" width="400" height="226" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 452">
@@ -68,10 +74,12 @@ html, body {
   <g id="obs"></g>
   <text id="datetime" x="16" y="24"></text>
 </svg>
+<canvas id="rainarea"></canvas>
 <script>
 const $rain = document.getElementById('rain');
 const $obs = document.getElementById('obs');
 const $datetime = document.getElementById('datetime');
+const $rainarea = document.getElementById('rainarea');
 const HOST = 'https://api.checkweather.sg';
 const lowerLat = 1.156, upperLat = 1.475, lowerLong = 103.565, upperLong = 104.130;
 const longRange = upperLong - lowerLong;
@@ -96,9 +104,42 @@ const timeID = (id) => (id.match(/\d{4}$/) || [''])[0].replace(/(\d{2})(\d{2})/,
   return h + ':' + m2 + ' ' + ampm;
 });
 
+const intensityColors = [
+  '#40FFFD',
+  '#3BEEEC',
+  '#32D0D2',
+  '#2CB9BD',
+  '#229698',
+  '#1C827D',
+  '#1B8742',
+  '#229F44',
+  '#27B240',
+  '#2CC53B',
+  '#30D43E',
+  '#38EF46',
+  '#3BFB49',
+  '#59FA61',
+  '#FEFB63',
+  '#FDFA53',
+  '#FDEB50',
+  '#FDD74A',
+  '#FCC344',
+  '#FAB03F',
+  '#FAA23D',
+  '#FB8938',
+  '#FB7133',
+  '#F94C2D',
+  '#F9282A',
+  '#DD1423',
+  '#BE0F1D',
+  '#B21867',
+  '#D028A6',
+  '#F93DF5',
+];
+
 let nowID;
 const showRain = () => {
-  fetch(HOST + '/v2/rainarea' + (nowID ? '' : '?' + (+new Date()))).then(res => res.json()).then(body => {
+  fetch(HOST + '/v2/rainarea').then(res => res.json()).then(body => {
     const { id } = body;
     if (nowID === id){
       setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
@@ -106,15 +147,37 @@ const showRain = () => {
     }
     nowID = id;
     $datetime.innerHTML = '';
+
+    const { radar, width, height } = body;
+    const canvas = $rainarea;
+    const ctx = canvas.getContext('2d');
+    canvas.width = width;
+    canvas.height = height;
+
+    const rows = radar.trimEnd().split(/\n/g);
+    for (let y = 0, l = rows.length; y < l; y++) {
+      const chars = rows[y];
+      for (let x = chars.search(/[^\s]/), rl = chars.length; x < rl; x++) {
+        const char = chars[x];
+        if (char && char !== ' ') {
+          const intensity = char.charCodeAt() - 33;
+          const color = intensityColors[Math.round(intensity / 100 * intensityColors.length)]
+          ctx.fillStyle = color;
+          ctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+
     // const path = 'https://www.weather.gov.sg/files/rainarea/50km/v2/dpsri_70km_2019021805500000dBR.dpsri.png' + '?' + (+new Date());
-    const path = `https://www.weather.gov.sg/files/rainarea/50km/v2/dpsri_70km_${id}0000dBR.dpsri.png`;
+    // const path = `https://www.weather.gov.sg/files/rainarea/50km/v2/dpsri_70km_${id}0000dBR.dpsri.png`;
     // $rain.setAttribute('href', path);
     // $rain.setAttribute('xlink:href', path);
-    $rain.setAttributeNS('http://www.w3.org/1999/xlink', 'href', path);
+    $rain.setAttributeNS('http://www.w3.org/1999/xlink', 'href', canvas.toDataURL());
     $rain.classList.remove('loaded');
     setTimeout(() => {
       $datetime.innerHTML = timeID(id);
     }, 1000);
+
     setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
   });
 }
@@ -131,7 +194,7 @@ $rain.onerror = () => {
 };
 
 const showObservations = () => {
-  fetch(HOST + '/v2/observations' + (nowID ? '' : '?' + (+new Date()))).then(res => res.json()).then(body => {
+  fetch(HOST + '/v2/observations').then(res => res.json()).then(body => {
     $obs.innerHTML = '';
     body.forEach(f => {
       const { lng, lat, temp_celcius, wind_direction } = f;
