@@ -118,8 +118,7 @@ const map = (window.$map = new mapboxgl.Map({
   container: 'map',
   center,
   // style: 'mapbox://styles/mapbox/dark-v10?optimize=true',
-  style:
-    'mapbox://styles/cheeaun/ck7rpspsa2mwh1imt7s5ual7l/draft?optimize=true',
+  style: 'mapbox://styles/cheeaun/ck7rpspsa2mwh1imt7s5ual7l',
   minZoom: 8,
   maxZoom: 14,
   renderWorldCopies: false,
@@ -168,9 +167,6 @@ class SnapBoundaryControl {
     this._container.appendChild(button);
 
     this._container.hidden = true;
-    const lnglatStr = ({ lng, lat }) =>
-      lng.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0] +
-      lat.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0];
     map.on('moveend', e => {
       if (e.snap) return;
       this._container.hidden = false;
@@ -382,7 +378,7 @@ const Player = () => {
       console.time('Fetch Snapshots');
       setLoading(true);
       unsub = weatherDB.onSnapshot(s => {
-        console.timeEnd('Fetch Snapshots');
+        if (firstLoad) console.timeEnd('Fetch Snapshots');
         setLoading(false);
 
         const processSnapshots = () => {

@@ -312,8 +312,8 @@ svg {
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
   #player-content {
     background-color: rgba(24, 24, 24, 0.4);
-    backdrop-filter: blur(20px) brightness(2) saturate(3);
-    -webkit-backdrop-filter: blur(20px) brightness(2) saturate(3);
+    backdrop-filter: blur(30px) saturate(3);
+    -webkit-backdrop-filter: blur(30px) saturate(3);
   }
 }
 @keyframes show-up {
@@ -335,10 +335,11 @@ svg {
 }
 #player-range svg {
   vertical-align: bottom;
-  transition: 0.3s opacity ease-in-out;
+  transition: 0.3s all ease-in-out;
 }
 .loading #player-range svg {
   opacity: 0.5;
+  filter: blur(4px);
 }
 #player-range progress {
   appearance: none;
