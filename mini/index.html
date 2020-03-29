@@ -138,7 +138,7 @@ const intensityColors = [
 
 let nowID;
 const showRain = () => {
-  fetch(HOST + '/v2/rainarea' + (nowID ? '' : '?' + (+new Date()))).then(res => res.json()).then(body => {
+  fetch(HOST + '/v2/rainarea').then(res => res.json()).then(body => {
     const { id } = body;
     if (nowID === id){
       setTimeout(requestAnimationFrame, 60 * 1000, showRain); // every min
@@ -193,7 +193,7 @@ $rain.onerror = () => {
 };
 
 const showObservations = () => {
-  fetch(HOST + '/v2/observations' + (nowID ? '' : '?' + (+new Date()))).then(res => res.json()).then(body => {
+  fetch(HOST + '/v2/observations').then(res => res.json()).then(body => {
     $obs.innerHTML = '';
     body.forEach(f => {
       const { lng, lat, temp_celcius, wind_direction } = f;
