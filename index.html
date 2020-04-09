@@ -90,9 +90,17 @@
 </svg>
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
 <script src="app.js"></script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23235796-10"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23235796-10"></script> -->
 <script>
+  var $s = document.createElement('script');
+  $s.async = true;
+  $s.src = 'https://www.googletagmanager.com/gtag/js?id=UA-23235796-10';
+  var s = document.getElementsByTagName('script')[0];
+  window.onload = function() {
+    setTimeout(function() {
+      s.parentNode.insertBefore($s, s);
+    }, 1000);
+  };
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
