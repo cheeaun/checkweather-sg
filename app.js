@@ -2,14 +2,13 @@ import { h, render } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import useInterval from 'react-use/lib/useInterval';
 import useRafState from 'react-use/lib/useRafState';
-import Sparkline from 'react-sparkline-svg';
 import contours from 'd3-contour/src/contours';
 import nanomemoize from 'nano-memoize';
+import { featureCollection, point, polygon, round } from '@turf/helpers';
+import { chaikin } from 'chaikin';
 
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
-
-import { featureCollection, point, polygon, round } from '@turf/helpers';
 
 import arrowPath from './assets/arrow-down-white.png';
 import iconSVGPath from './icons/icon-standalone.svg';
@@ -79,6 +78,7 @@ const intensityColors = [
   '#D028A6',
   '#F93DF5',
 ];
+const intensityColorsCount = intensityColors.length;
 
 const sgPolygon = {
   type: 'Polygon',
@@ -247,29 +247,14 @@ const convertRadar2Values = nanomemoize(
   },
 );
 
-// https://observablehq.com/@pamacha/chaikins-algorithm
-function chaikin(arr, num = 1) {
-  const l = arr.length;
-  const smooth = arr
-    .map((c, i) => {
-      return [
-        [
-          0.75 * c[0] + 0.25 * arr[(i + 1) % l][0],
-          0.75 * c[1] + 0.25 * arr[(i + 1) % l][1],
-        ],
-        [
-          0.25 * c[0] + 0.75 * arr[(i + 1) % l][0],
-          0.25 * c[1] + 0.75 * arr[(i + 1) % l][1],
-        ],
-      ];
-    })
-    .flat();
-  return num === 1 ? smooth : chaikin(smooth, num - 1);
-}
-
+// console.log({ intensityColors });
 const contour = contours()
   .size([width, height])
-  .thresholds([5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
+  // .thresholds(
+  //   intensityColors.map((_, i) => Math.ceil((i / intensityColorsCount) * 100)),
+  //   // .filter((_, i) => i % 2 !== 0),
+  // )
+  .thresholds([5, 20, 30, 40, 50, 60, 70, 80, 85, 90, 95, 97.5])
   .smooth(false);
 const convertValues2GeoJSON = nanomemoize(
   (id, values) => {
@@ -339,6 +324,52 @@ const rafInterval = (fn, delay, immediate = false) => {
   });
 };
 
+const ClipPathSparkline = ({
+  values = [],
+  maxValue = null,
+  smoothIterations = 1,
+  style = {},
+  ...props
+}) => {
+  if (!values.length) return null;
+  const total = values.length - 1;
+  const max = maxValue || Math.max(...values);
+  let path = '';
+  chaikin(
+    values.map((v, i) => {
+      const x = Math.round((i / total) * 100);
+      const y = Math.round((v / max) * 100);
+      return [x, y];
+    }),
+    smoothIterations,
+  ).forEach((p, i) => {
+    if (i > 0) path += ',';
+    path += `${p[0]}% ${100 - p[1]}%`;
+  });
+  return (
+    <div
+      {...props}
+      style={{
+        ...style,
+        clipPath: `polygon(0 100%, ${path}, 100% 100%)`,
+      }}
+    />
+  );
+};
+
+const testRadar = () => {
+  let test = '';
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const intensity = ~~Math.round((j / width) * 100);
+      const c = String.fromCharCode(intensity + 33);
+      test += c;
+    }
+    test += '\n';
+  }
+  return test;
+};
+
 const styleDataLoaded = new Promise(res => {
   map.once('styledata', res);
 });
@@ -391,7 +422,6 @@ const Player = () => {
             const rainarea = doc.data();
             const values = convertRadar2Values(doc.id, rainarea.radar);
             const geojsons = convertValues2GeoJSON(doc.id, values);
-            // console.log(doc.id, JSON.stringify(featureCollection(geojsons)));
             geoJSONList.push(...geojsons);
 
             const nextDoc = docs[i + 1];
@@ -426,14 +456,15 @@ const Player = () => {
 
         if (firstLoad) {
           const firstDoc = s.docs[0];
-          const values = convertRadar2Values(
-            firstDoc.id,
-            firstDoc.data().radar,
-          );
+          const radar = firstDoc.data().radar;
+          // const radar = testRadar();
+          const values = convertRadar2Values(firstDoc.id, radar);
           const geojsons = convertValues2GeoJSON(firstDoc.id, values);
-          map.getSource('rainradar').setData(featureCollection(geojsons));
-          firstLoad = false;
-          map.once('idle', () => requestAnimationFrame(processSnapshots));
+          styleDataLoaded.then(() => {
+            map.getSource('rainradar').setData(featureCollection(geojsons));
+            firstLoad = false;
+            map.once('idle', () => requestAnimationFrame(processSnapshots));
+          });
         } else {
           processSnapshots();
         }
@@ -481,16 +512,25 @@ const Player = () => {
     }
   }, [snapshots]);
 
+  const { id } = snapshots[Math.round(index) - 1];
+  const sgCoveragePercentages = snapshots.map(s => s.coverage_percentage.sg);
+  const maxSGCoveragePercentage = Math.max(...sgCoveragePercentages);
+
   useInterval(
     () => {
-      setIndex(index >= snapshotsCount ? 1 : index + 0.5);
+      const endOfSnapshots = index >= snapshotsCount;
+      if (endOfSnapshots && maxSGCoveragePercentage < 5) {
+        setPlaying(false);
+      } else {
+        setIndex(endOfSnapshots ? 1 : index + 0.5);
+      }
     },
     playing ? (index === snapshotsCount ? 2000 : 100) : null,
   );
 
-  const { id } = snapshots[Math.round(index) - 1];
-  const sgCoveragePercentages = snapshots.map(s => s.coverage_percentage.sg);
   const indexPercentage = ((index - 1) / (snapshotsCount - 1)) * 100;
+  const sparklineHeight = Math.max((maxSGCoveragePercentage / 100) * 40, 30);
+  const playIconSize = Math.max((maxSGCoveragePercentage / 100) * 24, 16);
 
   return (
     <div id="player-content" class={loading ? 'loading' : ''}>
@@ -507,7 +547,7 @@ const Player = () => {
         }}
       >
         <div id="player-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24">
+          <svg width={playIconSize} height={playIconSize} viewBox="0 0 24 24">
             <path
               d={
                 fwd
@@ -531,12 +571,12 @@ const Player = () => {
         >
           {convertRainID2Time(id)}
         </div>
-        <Sparkline
-          fill="url(#spark-gradient)"
-          stroke="transparent"
-          strokeWidth="0"
-          height={40}
+        <ClipPathSparkline
           values={sgCoveragePercentages}
+          maxValue={100}
+          smoothIterations={2}
+          style={{ height: sparklineHeight }}
+          id="player-sparkline"
         />
         <progress value={index} max={snapshotsCount} />
         <div id="player-labels">
@@ -561,7 +601,6 @@ const Player = () => {
           onMouseUp={() => setIndex(Math.round(index))}
           onTouchEnd={e => {
             setIndex(Math.round(index));
-            console.log(e);
             const touch = e.changedTouches[0];
             if (touch) {
               const { width, x } = touch.target.getBoundingClientRect();
@@ -604,7 +643,7 @@ render(<Player />, document.getElementById('player'));
       features: [],
     },
     // tolerance: 0.5,
-    // buffer: 0,
+    // buffer: screen.width > 1280 ? 128 : 0,
   });
 
   const layers = map.getStyle().layers;
@@ -647,11 +686,13 @@ render(<Player />, document.getElementById('player'));
   map.setLayerZoomRange('road-simple', 10, 24);
   map.setLayerZoomRange('aeroway-line', 10, 24);
 
-  const radarColors = intensityColors
-    .map((c, i, arr) => [((i + 1) / arr.length) * 100, c])
-    .flat();
+  const radarColors = intensityColors.reduce((acc, color, i) => {
+    const intensity = ((i + 1) / intensityColorsCount) * 100;
+    acc.push(intensity, color);
+    return acc;
+  }, []);
   const radarFillColor = [
-    'interpolate',
+    'interpolate-lab',
     ['linear'],
     ['number', ['get', 'intensity'], 0],
     0,
@@ -670,7 +711,15 @@ render(<Player />, document.getElementById('player'));
       paint: {
         'fill-antialias': false,
         'fill-color': radarFillColor,
-        'fill-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.6, 12, 0.04],
+        'fill-opacity': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          8,
+          ['case', ['>', ['number', ['get', 'intensity'], 0], 90], 1, 0.4],
+          12,
+          0.05,
+        ],
       },
     },
     'water',
