@@ -173,7 +173,7 @@ svg {
 }
 
 #rain-intensity-gradient {
-  padding: 0.4em 1em 0.5em;
+  padding: 0.5em;
   font-size: 11px;
   display: flex;
   justify-content: space-between;
@@ -215,10 +215,10 @@ svg {
 }
 #rain-intensity-gradient span {
   color: #000;
-  text-shadow: 1px 1px 1px #fff, 1px -1px 1px #fff, -1px -1px 1px #fff,
-    -1px 1px 1px #fff, 1px 1px #fff, 1px -1px #fff, -1px -1px #fff,
-    -1px 1px #fff;
   text-transform: uppercase;
+  background-color: rgba(255,255,255,.6);
+  padding: .15em .6em;
+  border-radius: 123123px;
 }
 
 #legend footer {
