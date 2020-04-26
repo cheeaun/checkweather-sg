@@ -247,6 +247,22 @@ svg {
   opacity: 0.5;
 }
 
+#self-promo {
+  margin-top: 2em;
+  padding: .8em;
+  background-color: rgba(255, 255, 255, 0.1);
+  background-image: radial-gradient(
+    farthest-side at top left,
+    #343332,
+    transparent
+  );
+  border-radius: 5px;
+  text-align: center;
+}
+#self-promo a {
+  color: inherit;
+}
+
 .mapboxgl-ctrl-custom-pitch {
   font-weight: bold;
   color: #333;
