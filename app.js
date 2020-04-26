@@ -370,6 +370,14 @@ const testRadar = () => {
   return test;
 };
 
+function debounce(fn, wait = 1){
+  let timeout;
+  return function (...args){
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn.call(this, ...args), wait);
+  };
+}
+
 const styleDataLoaded = new Promise(res => {
   map.once('styledata', res);
 });
@@ -399,6 +407,68 @@ const Player = () => {
     );
   }, []);
 
+  const debouncedOnSnapshot = debounce((s) => {
+    if (firstLoad) console.timeEnd('Fetch Snapshots');
+    setLoading(false);
+
+    const processSnapshots = () => {
+      console.time('Process Snapshots');
+      const shots = [];
+      const geoJSONList = [];
+
+      const docs = s.docs.reverse();
+      docs.forEach((doc, i) => {
+        const rainarea = doc.data();
+        const values = convertRadar2Values(doc.id, rainarea.radar);
+        const geojsons = convertValues2GeoJSON(doc.id, values);
+        geoJSONList.push(...geojsons);
+
+        const nextDoc = docs[i + 1];
+        if (nextDoc) {
+          const nextRainArea = nextDoc.data();
+          const nextValues = convertRadar2Values(
+            nextDoc.id,
+            nextRainArea.radar,
+          );
+          const midID = `${(Number(doc.id) + Number(nextDoc.id)) / 2}`;
+          const midValues = genMidValues(midID, values, nextValues);
+          const nextGeojsons = convertValues2GeoJSON(midID, midValues);
+          geoJSONList.push(...nextGeojsons);
+        }
+
+        shots.push(rainarea);
+      });
+
+      const collection = featureCollection(geoJSONList);
+      styleDataLoaded.then(() => {
+        if (!map.getFilter('rainradar')) {
+          map.setFilter('rainradar', ['==', 'id', s.docs[0].id], {
+            validate: false,
+          });
+        }
+        map.getSource('rainradar').setData(collection);
+        if (!index) setIndex(shots.length);
+        setSnapshots(shots);
+      });
+      console.timeEnd('Process Snapshots');
+    };
+
+    if (firstLoad) {
+      const firstDoc = s.docs[0];
+      const radar = firstDoc.data().radar;
+      // const radar = testRadar();
+      const values = convertRadar2Values(firstDoc.id, radar);
+      const geojsons = convertValues2GeoJSON(firstDoc.id, values);
+      styleDataLoaded.then(() => {
+        map.getSource('rainradar').setData(featureCollection(geojsons));
+        firstLoad = false;
+        map.once('idle', () => requestAnimationFrame(processSnapshots));
+      });
+    } else {
+      processSnapshots();
+    }
+  }, 300);
+
   useEffect(() => {
     let unsub = () => {};
     if (docHidden) {
@@ -408,67 +478,7 @@ const Player = () => {
       console.log('Start Snapshots');
       console.time('Fetch Snapshots');
       setLoading(true);
-      unsub = weatherDB.onSnapshot(s => {
-        if (firstLoad) console.timeEnd('Fetch Snapshots');
-        setLoading(false);
-
-        const processSnapshots = () => {
-          console.time('Process Snapshots');
-          const shots = [];
-          const geoJSONList = [];
-
-          const docs = s.docs.reverse();
-          docs.forEach((doc, i) => {
-            const rainarea = doc.data();
-            const values = convertRadar2Values(doc.id, rainarea.radar);
-            const geojsons = convertValues2GeoJSON(doc.id, values);
-            geoJSONList.push(...geojsons);
-
-            const nextDoc = docs[i + 1];
-            if (nextDoc) {
-              const nextRainArea = nextDoc.data();
-              const nextValues = convertRadar2Values(
-                nextDoc.id,
-                nextRainArea.radar,
-              );
-              const midID = `${(doc.id + nextDoc.id) / 2}`;
-              const midValues = genMidValues(midID, values, nextValues);
-              const nextGeojsons = convertValues2GeoJSON(midID, midValues);
-              geoJSONList.push(...nextGeojsons);
-            }
-
-            shots.push(rainarea);
-          });
-
-          const collection = featureCollection(geoJSONList);
-          styleDataLoaded.then(() => {
-            if (!map.getFilter('rainradar')) {
-              map.setFilter('rainradar', ['==', 'id', s.docs[0].id], {
-                validate: false,
-              });
-            }
-            map.getSource('rainradar').setData(collection);
-            if (!index) setIndex(shots.length);
-            setSnapshots(shots);
-          });
-          console.timeEnd('Process Snapshots');
-        };
-
-        if (firstLoad) {
-          const firstDoc = s.docs[0];
-          const radar = firstDoc.data().radar;
-          // const radar = testRadar();
-          const values = convertRadar2Values(firstDoc.id, radar);
-          const geojsons = convertValues2GeoJSON(firstDoc.id, values);
-          styleDataLoaded.then(() => {
-            map.getSource('rainradar').setData(featureCollection(geojsons));
-            firstLoad = false;
-            map.once('idle', () => requestAnimationFrame(processSnapshots));
-          });
-        } else {
-          processSnapshots();
-        }
-      });
+      unsub = weatherDB.onSnapshot(debouncedOnSnapshot);
     }
     return () => unsub();
   }, [docHidden]);
