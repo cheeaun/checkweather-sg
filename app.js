@@ -680,12 +680,6 @@ render(<Player />, document.getElementById('player'));
     }
   }
 
-  // Make water layer see-through
-  map.moveLayer('water', labelLayerId);
-  // map.setPaintProperty('water', 'fill-opacity', 0.5);
-  map.setLayerZoomRange('road-simple', 10, 24);
-  map.setLayerZoomRange('aeroway-line', 10, 24);
-
   const radarColors = intensityColors.reduce((acc, color, i) => {
     const intensity = ((i + 1) / intensityColorsCount) * 100;
     acc.push(intensity, color);
@@ -722,7 +716,7 @@ render(<Player />, document.getElementById('player'));
         ],
       },
     },
-    'water',
+    'water-overlay',
   );
 
   map.addLayer({
