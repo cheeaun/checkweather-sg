@@ -488,7 +488,7 @@ const Player = () => {
         const floorSnapshot = snapshots[Math.floor(floatIndex) - 1];
         const ceilSnapshot = snapshots[Math.ceil(floatIndex) - 1];
         if (floorSnapshot && ceilSnapshot) {
-          const midID = `${(floorSnapshot.id + ceilSnapshot.id) / 2}`;
+          const midID = `${(floorSnapshot.dt + ceilSnapshot.dt) / 2}`;
           id = midID;
         }
       }
