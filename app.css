@@ -216,8 +216,8 @@ svg {
 #rain-intensity-gradient span {
   color: #000;
   text-transform: uppercase;
-  background-color: rgba(255,255,255,.6);
-  padding: .15em .6em;
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 0.15em 0.6em;
   border-radius: 123123px;
 }
 
@@ -249,7 +249,7 @@ svg {
 
 #self-promo {
   margin-top: 2em;
-  padding: .8em;
+  padding: 0.8em;
   background-color: rgba(255, 255, 255, 0.1);
   background-image: radial-gradient(
     farthest-side at top left,
@@ -261,6 +261,29 @@ svg {
 }
 #self-promo a {
   color: inherit;
+  vertical-align: middle;
+}
+#self-promo img {
+  vertical-align: middle;
+}
+
+#twitter-button {
+  display: block;
+  margin-top: 0.8em;
+  padding: 0.8em;
+  background-color: rgba(255, 255, 255, 0.1);
+  background-image: radial-gradient(
+    farthest-side at top left,
+    #001c46,
+    transparent
+  );
+  border-radius: 5px;
+  text-align: center;
+  color: #1da1f2;
+  text-decoration: none;
+}
+#twitter-button svg {
+  vertical-align: middle;
 }
 
 .mapboxgl-ctrl-custom-pitch {
