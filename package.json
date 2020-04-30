@@ -35,6 +35,7 @@
     "cpy-cli": "~3.1.0",
     "gh-pages": "~2.2.0",
     "parcel-bundler": "~1.12.4",
+    "parcel-plugin-bundle-visualiser": "~1.2.0",
     "parcel-plugin-static-files-copy": "~2.3.1",
     "postcss-import-url": "~5.1.0"
   },
