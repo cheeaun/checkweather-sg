@@ -111,9 +111,9 @@ mapboxgl.accessToken =
 if (window.$map) window.$map.remove();
 
 const bounds = [lowerLong, lowerLat, upperLong, upperLat];
-const fitBoundsOptions = {
+const fitBoundsOptions = () => ({
   padding: window.innerWidth > 640 && window.innerHeight > 640 ? 120 : 0,
-};
+});
 const map = (window.$map = new mapboxgl.Map({
   container: 'map',
   center,
@@ -128,7 +128,7 @@ const map = (window.$map = new mapboxgl.Map({
   touchPitch: false,
   attributionControl: false,
   bounds,
-  fitBoundsOptions,
+  fitBoundsOptions: fitBoundsOptions(),
 }));
 map.touchZoomRotate.disableRotation();
 
@@ -163,7 +163,7 @@ class SnapBoundaryControl {
     button.onclick = e => {
       e.preventDefault();
       this._container.hidden = true;
-      map.fitBounds(bounds, fitBoundsOptions, { snap: true });
+      map.fitBounds(bounds, fitBoundsOptions(), { snap: true });
     };
     this._container.appendChild(button);
 
