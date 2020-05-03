@@ -160,7 +160,7 @@ class SnapBoundaryControl {
     button.title = 'Snap to boundary';
     button.innerHTML =
       '<svg height="100%" width="100%" viewBox="0 0 24 24" fill="#333"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm-7 7H3v4c0 1.1.9 2 2 2h4v-2H5v-4zM5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zm14-2h-4v2h4v4h2V5c0-1.1-.9-2-2-2zm0 16h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4z"/></svg>';
-    button.onclick = e => {
+    button.onclick = (e) => {
       e.preventDefault();
       this._container.hidden = true;
       map.fitBounds(bounds, fitBoundsOptions(), { snap: true });
@@ -168,7 +168,7 @@ class SnapBoundaryControl {
     this._container.appendChild(button);
 
     this._container.hidden = true;
-    map.on('moveend', e => {
+    map.on('moveend', (e) => {
       if (e.snap) return;
       this._container.hidden = false;
     });
@@ -183,11 +183,11 @@ class SnapBoundaryControl {
 map.addControl(new SnapBoundaryControl(), 'top-right');
 
 const $loader = document.getElementById('loader');
-map.on('dataloading', e => {
+map.on('dataloading', (e) => {
   $loader.hidden = false;
 });
 let dataDone = null;
-map.on('data', e => {
+map.on('data', (e) => {
   clearTimeout(dataDone);
   dataDone = setTimeout(() => {
     $loader.hidden = true;
@@ -197,16 +197,16 @@ map.on('data', e => {
 const $legend = document.getElementById('legend');
 const $infoButton = document.getElementById('info-button');
 const $legendClose = document.getElementById('legend-close');
-$infoButton.onclick = e => {
+$infoButton.onclick = (e) => {
   e.preventDefault();
   $legend.hidden = !$legend.hidden;
 };
-$legendClose.onclick = e => {
+$legendClose.onclick = (e) => {
   e.preventDefault();
   $legend.hidden = true;
 };
 
-const convertRainID2Time = nanomemoize(id => {
+const convertRainID2Time = nanomemoize((id) => {
   const time = (id.match(/\d{4}$/) || [''])[0].replace(
     /(\d{2})(\d{2})/,
     (m, m1, m2) => {
@@ -220,10 +220,10 @@ const convertRainID2Time = nanomemoize(id => {
   return time;
 });
 
-const convertX2Lng = nanomemoize(x =>
+const convertX2Lng = nanomemoize((x) =>
   round(lowerLong + (x / width) * distanceLong, 4),
 );
-const convertY2Lat = nanomemoize(y =>
+const convertY2Lat = nanomemoize((y) =>
   round(upperLat - (y / height) * distanceLat, 4),
 );
 
@@ -269,8 +269,8 @@ const convertValues2GeoJSON = nanomemoize(
           properties: { intensity: value, id },
           geometry: {
             type,
-            coordinates: coordinates.map(c1 =>
-              c1.map(c2 =>
+            coordinates: coordinates.map((c1) =>
+              c1.map((c2) =>
                 chaikin(c2.map(([x, y]) => [convertX2Lng(x), convertY2Lat(y)])),
               ),
             ),
@@ -300,10 +300,10 @@ const genMidValues = nanomemoize(
 
 const showObservations = () => {
   fetch('https://api.checkweather.sg/v2/observations')
-    .then(res => res.json())
-    .then(data => {
+    .then((res) => res.json())
+    .then((data) => {
       // console.log('observations', data);
-      const points = data.map(d => {
+      const points = data.map((d) => {
         const { id, lng, lat, ...props } = d;
         // Special case for S121 overlapping with S23
         if (id === 'S121') {
@@ -371,15 +371,15 @@ const testRadar = () => {
   return test;
 };
 
-function debounce(fn, wait = 1){
+function debounce(fn, wait = 1) {
   let timeout;
-  return function (...args){
+  return function (...args) {
     clearTimeout(timeout);
     timeout = setTimeout(() => fn.call(this, ...args), wait);
   };
 }
 
-const styleDataLoaded = new Promise(res => {
+const styleDataLoaded = new Promise((res) => {
   map.once('styledata', res);
 });
 
@@ -524,7 +524,7 @@ const Player = () => {
   }, [snapshots]);
 
   const { id } = snapshots[Math.round(index) - 1];
-  const sgCoveragePercentages = snapshots.map(s => s.coverage_percentage.sg);
+  const sgCoveragePercentages = snapshots.map((s) => s.coverage_percentage.sg);
   const maxSGCoveragePercentage = Math.max(...sgCoveragePercentages);
 
   useInterval(
@@ -605,12 +605,12 @@ const Player = () => {
           max={snapshotsCount}
           step="any"
           value={index}
-          onInput={e => {
+          onInput={(e) => {
             setPlaying(false);
             setIndex(e.target.value);
           }}
           onMouseUp={() => setIndex(Math.round(index))}
-          onTouchEnd={e => {
+          onTouchEnd={(e) => {
             setIndex(Math.round(index));
             const touch = e.changedTouches[0];
             if (touch) {
@@ -840,14 +840,14 @@ render(<Player />, document.getElementById('player'));
 })();
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
+  window.addEventListener('load', function () {
     navigator.serviceWorker.register('./sw.js');
   });
 }
 
 const isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') !== -1;
 if (isSafari) {
-  setTimeout(function() {
+  setTimeout(function () {
     const ratio = window.devicePixelRatio;
     const canvas = document.createElement('canvas');
     const w = (canvas.width = window.screen.width * ratio);
