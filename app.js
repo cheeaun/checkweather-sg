@@ -125,6 +125,7 @@ const map = (window.$map = new mapboxgl.Map({
   boxZoom: false,
   pitchWithRotate: false,
   dragRotate: false,
+  touchPitch: false,
   attributionControl: false,
   bounds,
   fitBoundsOptions,
