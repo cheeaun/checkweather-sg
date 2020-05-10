@@ -305,11 +305,6 @@ const showObservations = () => {
       // console.log('observations', data);
       const points = data.map((d) => {
         const { id, lng, lat, ...props } = d;
-        // Special case for S121 overlapping with S23
-        if (id === 'S121') {
-          delete props.temp_celcius;
-          delete props.relative_humidity;
-        }
         return point([lng, lat], props, { id });
       });
       const pointsCollection = featureCollection(points);
