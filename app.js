@@ -29,6 +29,13 @@ const lowerLat = 1.156,
 const distanceLong = Math.abs(upperLong - lowerLong);
 const distanceLat = Math.abs(upperLat - lowerLat);
 
+const options = {
+  minimalist: 'minimalist'
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const optionMinimalist = urlParams.get(options.minimalist);
+
 const bboxGeoJSON = polygon([
   [
     [-180, 90],
@@ -627,7 +634,17 @@ const Player = () => {
     </div>
   );
 };
-render(<Player />, document.getElementById('player'));
+
+if (optionMinimalist) {
+  const $elements = [
+    document.getElementsByTagName('HEADER')[0],
+    document.getElementsByClassName('mapboxgl-control-container')[0]
+  ]
+
+  $elements.forEach($elm => $elm.style.display = 'none')
+} else {
+  render(<Player />, document.getElementById('player'));
+}
 
 (async () => {
   await styleDataLoaded;
