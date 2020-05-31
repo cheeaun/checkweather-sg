@@ -101,7 +101,7 @@ svg {
 #legend {
   color: #fff;
   background-color: rgba(0, 0, 0, 0.2);
-  background-image: linear-gradient(to top left, #000, transparent);
+  background-image: linear-gradient(to top left, #000, rgba(0, 0, 0, 0.75));
   padding: 1em;
   position: fixed;
   top: 0;
@@ -249,13 +249,8 @@ svg {
 
 #self-promo {
   margin-top: 2em;
-  padding: 0.8em;
-  background-color: rgba(255, 255, 255, 0.1);
-  background-image: radial-gradient(
-    farthest-side at top left,
-    #343332,
-    transparent
-  );
+  padding: 0.7em;
+  background-color: rgba(30, 30, 30, 0.9);
   border-radius: 5px;
   text-align: center;
 }
@@ -267,23 +262,23 @@ svg {
   vertical-align: middle;
 }
 
-#twitter-button {
+.sns-button {
   display: block;
   margin-top: 0.8em;
-  padding: 0.8em;
-  background-color: rgba(255, 255, 255, 0.1);
-  background-image: radial-gradient(
-    farthest-side at top left,
-    #001c46,
-    transparent
-  );
+  padding: 0.7em;
+  background-color: rgba(30, 30, 30, 0.9);
   border-radius: 5px;
   text-align: center;
-  color: #1da1f2;
   text-decoration: none;
 }
-#twitter-button svg {
+.sns-button svg {
   vertical-align: middle;
+}
+#twitter-button {
+  color: #1da1f2;
+}
+#telegram-button {
+  color: #0088cc;
 }
 
 .mapboxgl-ctrl-custom-pitch {
