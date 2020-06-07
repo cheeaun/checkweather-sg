@@ -5,13 +5,14 @@ import useRafState from 'react-use/lib/useRafState';
 import contours from 'd3-contour/src/contours';
 import nanomemoize from 'nano-memoize';
 import { featureCollection, point, polygon, round } from '@turf/helpers';
-import { chaikin } from 'chaikin';
 
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 
 import arrowPath from './assets/arrow-down-white.png';
 import iconSVGPath from './icons/icon-standalone.svg';
+
+import chaikin from './utils/chaikin';
 
 // Initialize Firebase
 firebase.initializeApp({
@@ -270,9 +271,12 @@ const convertValues2GeoJSON = nanomemoize(
           geometry: {
             type,
             coordinates: coordinates.map((c1) =>
-              c1.map((c2) =>
-                chaikin(c2.map(([x, y]) => [convertX2Lng(x), convertY2Lat(y)])),
-              ),
+              c1.map((c2) => {
+                c2.pop(); // Remove last coord
+                return chaikin(
+                  c2.map(([x, y]) => [convertX2Lng(x), convertY2Lat(y)]),
+                );
+              }),
             ),
           },
         });
