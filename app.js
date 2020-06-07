@@ -255,7 +255,7 @@ const contour = contours()
   //   intensityColors.map((_, i) => Math.ceil((i / intensityColorsCount) * 100)),
   //   // .filter((_, i) => i % 2 !== 0),
   // )
-  .thresholds([5, 20, 30, 40, 50, 60, 70, 80, 85, 90, 95, 97.5])
+  .thresholds([4, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90, 95, 97.5])
   .smooth(false);
 const convertValues2GeoJSON = nanomemoize(
   (id, values) => {
