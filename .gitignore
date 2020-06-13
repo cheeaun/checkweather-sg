@@ -3,3 +3,4 @@ dist
 .cache
 node_modules
 visualization
+.parcel-cache

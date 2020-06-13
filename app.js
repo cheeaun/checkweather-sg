@@ -1,4 +1,5 @@
 import { h, render } from 'preact';
+import mapboxgl from 'mapbox-gl';
 import { useState, useEffect } from 'preact/hooks';
 import useInterval from 'react-use/lib/useInterval';
 import useRafState from 'react-use/lib/useRafState';
@@ -9,8 +10,8 @@ import { featureCollection, point, polygon, round } from '@turf/helpers';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 
-import arrowPath from './assets/arrow-down-white.png';
-import iconSVGPath from './icons/icon-standalone.svg';
+import arrowPath from 'url:./assets/arrow-down-white.png';
+import iconSVGPath from 'url:./icons/icon-standalone.svg';
 
 import chaikin from './utils/chaikin';
 
