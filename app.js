@@ -342,6 +342,7 @@ const ClipPathSparkline = ({
       return [x, y];
     }),
     smoothIterations,
+    false,
   ).forEach((p, i) => {
     if (i > 0) path += ',';
     path += `${p[0]}% ${100 - p[1]}%`;
