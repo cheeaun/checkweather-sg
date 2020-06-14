@@ -115,13 +115,14 @@ const bounds = [lowerLong, lowerLat, upperLong, upperLat];
 const fitBoundsOptions = () => ({
   padding: window.innerWidth > 640 && window.innerHeight > 640 ? 120 : 0,
 });
+const maxZoom = 14;
 const map = (window.$map = new mapboxgl.Map({
   container: 'map',
   center,
   // style: 'mapbox://styles/mapbox/dark-v10?optimize=true',
   style: 'mapbox://styles/cheeaun/ck7rpspsa2mwh1imt7s5ual7l',
   minZoom: 8,
-  maxZoom: 14,
+  maxZoom,
   renderWorldCopies: false,
   boxZoom: false,
   pitchWithRotate: false,
@@ -228,10 +229,11 @@ const convertY2Lat = nanomemoize((y) =>
   round(upperLat - (y / height) * distanceLat, 4),
 );
 
+const zerosArray = new Array(width * height).fill(0);
 const convertRadar2Values = nanomemoize(
   (id, radar) => {
     const rows = radar.trimEnd().split(/\n/g);
-    const values = new Array(width * height).fill(0);
+    const values = zerosArray.slice();
     for (let y = 0, l = rows.length; y < l; y++) {
       const chars = rows[y];
       for (let x = chars.search(/[^\s]/), rl = chars.length; x < rl; x++) {
@@ -273,9 +275,10 @@ const convertValues2GeoJSON = nanomemoize(
             coordinates: coordinates.map((c1) =>
               c1.map((c2) => {
                 c2.pop(); // Remove last coord
-                return chaikin(
-                  c2.map(([x, y]) => [convertX2Lng(x), convertY2Lat(y)]),
-                );
+                return chaikin(c2).map(([x, y]) => [
+                  convertX2Lng(x),
+                  convertY2Lat(y),
+                ]);
               }),
             ),
           },
@@ -646,6 +649,7 @@ render(<Player />, document.getElementById('player'));
     },
     tolerance: 5,
     buffer: 0,
+    maxzoom: maxZoom,
   });
   map.addSource('rainradar', {
     type: 'geojson',
@@ -653,6 +657,7 @@ render(<Player />, document.getElementById('player'));
       type: 'FeatureCollection',
       features: [],
     },
+    maxzoom: maxZoom,
     // tolerance: 0.5,
     // buffer: screen.width > 1280 ? 128 : 0,
   });
@@ -829,6 +834,7 @@ render(<Player />, document.getElementById('player'));
         tolerance: 10,
         buffer: 0,
         data: bboxGeoJSON,
+        maxzoom: maxZoom,
       },
       paint: {
         'fill-color': 'rgba(0,0,0,.5)',
