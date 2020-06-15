@@ -20,7 +20,7 @@ Since I've gone this far, so I thought "why not?", let's build yet another weath
 
 ### The lock-down period
 
-2 years later (2020), I [revisted](https://twitter.com/cheeaun/status/1257305456055222273) this project and rebuilt it:
+2 years later (2020), I [revisited](https://twitter.com/cheeaun/status/1257305456055222273) this project and rebuilt it:
 
 - ⏳ Past 2 hours of radar snapshots
 - 🧼 Cleaner UI
@@ -31,7 +31,7 @@ Since I've gone this far, so I thought "why not?", let's build yet another weath
 
 I've also built [an 📱 iOS app](https://github.com/cheeaun/checkweather-sg-native).
 
-And... a plethora of open-source projects to make impossible possible:
+And... a plethora of open-source projects to make the impossible possible:
 
 - ☔️ [rain-geojson-sg](https://github.com/cheeaun/rain-geojson-sg) - the core API to fetch weather observations and rain radar
 - ⏰ [checkweather-sg-checker](https://github.com/cheeaun/checkweather-sg-checker) - a scheduled serverless function to keep checking for rain
