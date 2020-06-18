@@ -270,6 +270,8 @@ svg {
   border-radius: 5px;
   text-align: center;
   text-decoration: none;
+  color: #fff;
+  line-height: 1;
 }
 .sns-button svg {
   vertical-align: middle;
