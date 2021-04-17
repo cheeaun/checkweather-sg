@@ -1,5 +1,5 @@
 tmp
 dist
-.cache
+.parcel-cache
 node_modules
 visualization

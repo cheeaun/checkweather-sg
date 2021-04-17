@@ -6,11 +6,11 @@ import contours from 'd3-contour/src/contours';
 import nanomemoize from 'nano-memoize';
 import { featureCollection, point, polygon, round } from '@turf/helpers';
 
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-import arrowPath from './assets/arrow-down-white.png';
-import iconSVGPath from './icons/icon-standalone.svg';
+import arrowPath from 'url:./assets/arrow-down-white.png';
+import iconSVGPath from 'url:./icons/icon-standalone.svg';
 
 import chaikin from './utils/chaikin';
 
@@ -847,7 +847,7 @@ render(<Player />, document.getElementById('player'));
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js');
+    navigator.serviceWorker.register(new URL('./sw.js', import.meta.url));
   });
 }
 

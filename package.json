@@ -4,8 +4,7 @@
   "description": "Yet another weather app for Singapore",
   "main": "index.html",
   "scripts": {
-    "parcel": "parcel",
-    "start": "parcel index.html privacy-policy/index.html -d tmp --no-hmr",
+    "start": "parcel serve ./index.html ./privacy-policy/index.html --no-hmr",
     "build": "rm -rf dist && parcel build index.html privacy-policy/index.html --no-cache",
     "build-prod": "npm run build && cpy {CNAME,favicon.ico} dist"
   },
@@ -19,22 +18,24 @@
   "author": "Lim Chee Aun",
   "license": "MIT",
   "dependencies": {
-    "@turf/helpers": "~6.1.4",
-    "d3-contour": "~1.3.2",
-    "firebase": "~7.15.1",
-    "nano-memoize": "~1.1.11",
-    "preact": "~10.4.4",
-    "react-use": "~15.2.4"
+    "@parcel/babel-plugin-transform-runtime": "^2.0.0-nightly.1823",
+    "@parcel/babel-preset-env": "^2.0.0-beta.2",
+    "@turf/helpers": "~6.3.0",
+    "d3-contour": "~2.0.0",
+    "firebase": "~8.4.1",
+    "nano-memoize": "~1.2.1",
+    "preact": "~10.5.13",
+    "react-use": "~17.2.3"
   },
   "devDependencies": {
-    "@babel/core": "~7.10.2",
-    "@babel/plugin-transform-react-jsx": "~7.10.1",
-    "autoprefixer": "~9.8.0",
+    "@babel/plugin-transform-react-jsx": "~7.13.12",
+    "@parcel/packager-raw-url": "^2.0.0-beta.2",
+    "@parcel/transformer-webmanifest": "^2.0.0-beta.2",
+    "autoprefixer": "~10.2.5",
     "cpy-cli": "~3.1.1",
-    "parcel-bundler": "~1.12.4",
-    "parcel-plugin-bundle-visualiser": "~1.2.0",
-    "parcel-plugin-static-files-copy": "~2.4.3",
-    "postcss-import-url": "~5.1.0"
+    "parcel": "~2.0.0-beta.2",
+    "parcel-plugin-static-files-copy": "~2.6.0",
+    "postcss-import-url": "~7.0.0"
   },
   "staticFiles": {
     "staticPath": [
