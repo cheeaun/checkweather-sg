@@ -6,8 +6,15 @@ import contours from 'd3-contour/src/contours';
 import nanomemoize from 'nano-memoize';
 import { featureCollection, point, polygon, round } from '@turf/helpers';
 
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import {
+  getFirestore,
+  query,
+  collection,
+  orderBy,
+  limit,
+  onSnapshot,
+} from 'firebase/firestore';
 
 import arrowPath from 'url:./assets/arrow-down-white.png';
 import iconSVGPath from 'url:./icons/icon-standalone.svg';
@@ -18,10 +25,10 @@ import chaikin from './utils/chaikin';
 // const testSnapshot = require('./utils/testSnapshot').default;
 
 // Initialize Firebase
-firebase.initializeApp({
+const firebaseApp = initializeApp({
   projectId: 'check-weather-sg',
 });
-const db = firebase.firestore();
+const db = getFirestore(firebaseApp);
 
 const width = 217,
   height = 120;
@@ -390,10 +397,11 @@ const styleDataLoaded = new Promise((res) => {
 });
 
 const RAINAREA_COUNT = 25;
-const weatherDB = db
-  .collection('weather')
-  .orderBy('id', 'desc')
-  .limit(RAINAREA_COUNT);
+const weatherDB = query(
+  collection(db, 'weather'),
+  orderBy('id', 'desc'),
+  limit(RAINAREA_COUNT),
+);
 
 let firstLoad = true;
 let memorySaverMode = false;
@@ -492,7 +500,7 @@ const Player = () => {
       console.log('Start Snapshots');
       console.time('Fetch Snapshots');
       setLoading(true);
-      unsub = weatherDB.onSnapshot(debouncedOnSnapshot);
+      unsub = onSnapshot(weatherDB, debouncedOnSnapshot);
     }
     return () => unsub();
   }, [docHidden]);

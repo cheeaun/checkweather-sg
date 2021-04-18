@@ -20,7 +20,7 @@
     "@parcel/babel-preset-env": "~2.0.0-beta.2",
     "@turf/helpers": "~6.3.0",
     "d3-contour": "~2.0.0",
-    "firebase": "~8.4.1",
+    "firebase": "~9.0.0-beta.1",
     "nano-memoize": "~1.2.1",
     "preact": "~10.5.13",
     "react-use": "~17.2.3"
