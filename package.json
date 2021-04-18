@@ -37,7 +37,11 @@
     "postcss-import-url": "~7.0.0"
   },
   "browserslist": [
-    "last 2 Chrome versions"
+    ">0.2%",
+    "not dead",
+    "not op_mini all",
+    "not chrome < 51",
+    "not safari < 10"
   ],
   "alias": {
     "react": "preact/compat",
