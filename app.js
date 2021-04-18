@@ -14,6 +14,9 @@ import iconSVGPath from 'url:./icons/icon-standalone.svg';
 
 import chaikin from './utils/chaikin';
 
+// const TESTING_MODE = location.hash === '#test-mode';
+// const testSnapshot = require('./utils/testSnapshot').default;
+
 // Initialize Firebase
 firebase.initializeApp({
   projectId: 'check-weather-sg',
@@ -393,6 +396,7 @@ const weatherDB = db
   .limit(RAINAREA_COUNT);
 
 let firstLoad = true;
+let memorySaverMode = false;
 const Player = () => {
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useRafState(null);
@@ -412,8 +416,13 @@ const Player = () => {
   }, []);
 
   const debouncedOnSnapshot = debounce((s) => {
+    // if (TESTING_MODE) s = testSnapshot();
     if (firstLoad) console.timeEnd('Fetch Snapshots');
     setLoading(false);
+
+    memorySaverMode = s.docs.every(
+      (d) => d.data().coverage_percentage.all > 90,
+    );
 
     const processSnapshots = () => {
       console.time('Process Snapshots');
@@ -423,18 +432,20 @@ const Player = () => {
       const docs = s.docs.reverse();
       docs.forEach((doc, i) => {
         const rainarea = doc.data();
-        const values = convertRadar2Values(doc.id, rainarea.radar);
-        const geojsons = convertValues2GeoJSON(doc.id, values);
+        const values = convertRadar2Values(rainarea.id, rainarea.radar);
+        const geojsons = convertValues2GeoJSON(rainarea.id, values);
         geoJSONList.push(...geojsons);
 
         const nextDoc = docs[i + 1];
-        if (nextDoc) {
+        if (nextDoc && !memorySaverMode) {
           const nextRainArea = nextDoc.data();
           const nextValues = convertRadar2Values(
-            nextDoc.id,
+            nextRainArea.id,
             nextRainArea.radar,
           );
-          const midID = `${(Number(doc.id) + Number(nextDoc.id)) / 2}`;
+          const midID = `${
+            (Number(rainarea.id) + Number(nextRainArea.id)) / 2
+          }`;
           const midValues = genMidValues(midID, values, nextValues);
           const nextGeojsons = convertValues2GeoJSON(midID, midValues);
           geoJSONList.push(...nextGeojsons);
@@ -446,7 +457,7 @@ const Player = () => {
       const collection = featureCollection(geoJSONList);
       styleDataLoaded.then(() => {
         if (!map.getFilter('rainradar')) {
-          map.setFilter('rainradar', ['==', 'id', s.docs[0].id], {
+          map.setFilter('rainradar', ['==', 'id', s.docs[0].data().id], {
             validate: false,
           });
         }
@@ -458,10 +469,9 @@ const Player = () => {
     };
 
     if (firstLoad) {
-      const firstDoc = s.docs[0];
-      const radar = firstDoc.data().radar;
+      const firstDoc = s.docs[0].data();
       // const radar = testRadar();
-      const values = convertRadar2Values(firstDoc.id, radar);
+      const values = convertRadar2Values(firstDoc.id, firstDoc.radar);
       const geojsons = convertValues2GeoJSON(firstDoc.id, values);
       styleDataLoaded.then(() => {
         map.getSource('rainradar').setData(featureCollection(geojsons));
@@ -498,7 +508,7 @@ const Player = () => {
       const shot = snapshots[roundIndex - 1];
       let id = shot.id;
 
-      if (floatIndex !== roundIndex) {
+      if (floatIndex !== roundIndex && !memorySaverMode) {
         const floorSnapshot = snapshots[Math.floor(floatIndex) - 1];
         const ceilSnapshot = snapshots[Math.ceil(floatIndex) - 1];
         if (floorSnapshot && ceilSnapshot) {
