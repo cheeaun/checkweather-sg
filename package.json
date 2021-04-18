@@ -4,7 +4,8 @@
   "description": "Yet another weather app for Singapore",
   "scripts": {
     "start": "parcel serve ./index.html",
-    "build": "rm -rf dist && parcel build index.html --no-cache"
+    "build": "rm -rf dist && parcel build index.html --no-cache",
+    "postbuild": "npx -y replace 'export default{}' '' dist/sw.js --yes"
   },
   "keywords": [
     "weather",
@@ -23,7 +24,11 @@
     "firebase": "~9.0.0-beta.1",
     "nano-memoize": "~1.2.1",
     "preact": "~10.5.13",
-    "react-use": "~17.2.3"
+    "react-use": "~17.2.3",
+    "workbox-cacheable-response": "~6.1.5",
+    "workbox-expiration": "~6.1.5",
+    "workbox-routing": "~6.1.5",
+    "workbox-strategies": "~6.1.5"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "~7.13.12",

@@ -1,22 +1,34 @@
-importScripts(
-  'https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js',
-);
+import { registerRoute } from 'workbox-routing';
+import {
+  NetworkFirst,
+  StaleWhileRevalidate,
+  CacheFirst,
+} from 'workbox-strategies';
+import { ExpirationPlugin } from 'workbox-expiration';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
-workbox.googleAnalytics.initialize();
-
-workbox.routing.registerRoute(
-  /\/$/,
-  new workbox.strategies.NetworkFirst({
+registerRoute(
+  ({ request }) => request.mode === 'navigate',
+  new NetworkFirst({
     cacheName: 'index',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [200],
+      }),
+    ],
   }),
 );
 
-workbox.routing.registerRoute(
-  /\.(?:js|css)$/,
-  new workbox.strategies.CacheFirst({
+registerRoute(
+  ({ request }) =>
+    request.destination === 'style' || request.destination === 'script',
+  new StaleWhileRevalidate({
     cacheName: 'static-resources',
     plugins: [
-      new workbox.expiration.ExpirationPlugin({
+      new CacheableResponsePlugin({
+        statuses: [200],
+      }),
+      new ExpirationPlugin({
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
         purgeOnQuotaError: true,
       }),
@@ -24,62 +36,62 @@ workbox.routing.registerRoute(
   }),
 );
 
-workbox.routing.registerRoute(
-  /\.(?:png|gif|jpg|jpeg|svg)$/,
-  new workbox.strategies.CacheFirst({
+registerRoute(
+  ({ request }) => request.destination === 'image',
+  new CacheFirst({
     cacheName: 'images',
     plugins: [
-      new workbox.expiration.ExpirationPlugin({
+      new ExpirationPlugin({
         maxEntries: 60,
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
         purgeOnQuotaError: true,
       }),
-      new workbox.cacheableResponse.CacheableResponsePlugin({
-        statuses: [0, 200],
+      new CacheableResponsePlugin({
+        statuses: [200],
       }),
     ],
   }),
 );
 
-workbox.routing.registerRoute(
+registerRoute(
   /.*api\.mapbox\.com\/fonts/,
-  new workbox.strategies.CacheFirst({
+  new CacheFirst({
     cacheName: 'mapbox-fonts',
     plugins: [
-      new workbox.expiration.ExpirationPlugin({
+      new ExpirationPlugin({
         maxEntries: 10,
         purgeOnQuotaError: true,
       }),
-      new workbox.cacheableResponse.CacheableResponsePlugin({
-        statuses: [0, 200],
+      new CacheableResponsePlugin({
+        statuses: [200],
       }),
     ],
   }),
 );
 
-workbox.routing.registerRoute(
+registerRoute(
   /.*(?:tiles\.mapbox|api\.mapbox)\.com.*$/,
-  new workbox.strategies.CacheFirst({
+  new StaleWhileRevalidate({
     cacheName: 'mapbox',
     plugins: [
-      new workbox.expiration.ExpirationPlugin({
+      new ExpirationPlugin({
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
         purgeOnQuotaError: true,
       }),
-      new workbox.cacheableResponse.CacheableResponsePlugin({
-        statuses: [0, 200],
+      new CacheableResponsePlugin({
+        statuses: [200],
       }),
     ],
   }),
 );
 
-workbox.routing.registerRoute(
+registerRoute(
   /.*api\.checkweather/,
-  new workbox.strategies.NetworkFirst({
+  new NetworkFirst({
     cacheName: 'api',
     plugins: [
-      new workbox.cacheableResponse.CacheableResponsePlugin({
-        statuses: [0, 200],
+      new CacheableResponsePlugin({
+        statuses: [200],
       }),
     ],
   }),
