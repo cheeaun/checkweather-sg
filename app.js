@@ -857,7 +857,7 @@ render(<Player />, document.getElementById('player'));
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register(new URL('./sw.js', import.meta.url));
+    navigator.serviceWorker.register('./sw.js');
   });
 }
 
