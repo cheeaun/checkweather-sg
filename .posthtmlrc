@@ -1,0 +1,10 @@
+{
+  "plugins": {
+    "posthtml-inline-assets": {
+      "transforms": {
+        "script": false,
+        "image": false
+      }
+    }
+  }
+}
