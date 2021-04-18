@@ -2,11 +2,9 @@
   "name": "checkweather-sg",
   "version": "1.0.0",
   "description": "Yet another weather app for Singapore",
-  "main": "index.html",
   "scripts": {
-    "start": "parcel serve ./index.html ./privacy-policy/index.html --no-hmr",
-    "build": "rm -rf dist && parcel build index.html privacy-policy/index.html --no-cache",
-    "build-prod": "npm run build && cpy {CNAME,favicon.ico} dist"
+    "start": "parcel serve ./index.html --no-hmr",
+    "build": "rm -rf dist && parcel build index.html --no-cache"
   },
   "keywords": [
     "weather",
@@ -18,8 +16,8 @@
   "author": "Lim Chee Aun",
   "license": "MIT",
   "dependencies": {
-    "@parcel/babel-plugin-transform-runtime": "^2.0.0-nightly.1823",
-    "@parcel/babel-preset-env": "^2.0.0-beta.2",
+    "@parcel/babel-plugin-transform-runtime": "~2.0.0-nightly.1823",
+    "@parcel/babel-preset-env": "~2.0.0-beta.2",
     "@turf/helpers": "~6.3.0",
     "d3-contour": "~2.0.0",
     "firebase": "~8.4.1",
@@ -29,23 +27,14 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "~7.13.12",
-    "@parcel/packager-raw-url": "^2.0.0-beta.2",
-    "@parcel/transformer-webmanifest": "^2.0.0-beta.2",
+    "@parcel/packager-raw-url": "~2.0.0-beta.2",
+    "@parcel/transformer-image": "~2.0.0-beta.2",
+    "@parcel/transformer-webmanifest": "~2.0.0-beta.2",
     "autoprefixer": "~10.2.5",
     "cpy-cli": "~3.1.1",
     "parcel": "~2.0.0-beta.2",
-    "parcel-plugin-static-files-copy": "~2.6.0",
+    "parcel-reporter-static-files-copy": "~1.2.2",
     "postcss-import-url": "~7.0.0"
-  },
-  "staticFiles": {
-    "staticPath": [
-      {
-        "staticPath": "mini",
-        "staticOutDir": "mini"
-      }
-    ],
-    "watcherGlob": "**",
-    "excludeGlob": "!(index.html)"
   },
   "browserslist": [
     "last 2 Chrome versions"
