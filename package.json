@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Yet another weather app for Singapore",
   "scripts": {
-    "start": "parcel serve ./index.html --no-hmr",
+    "start": "parcel serve ./index.html",
     "build": "rm -rf dist && parcel build index.html --no-cache"
   },
   "keywords": [
