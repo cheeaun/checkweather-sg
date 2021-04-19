@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "description": "Yet another weather app for Singapore",
   "scripts": {
-    "start": "parcel serve ./index.html",
-    "build": "rm -rf dist && parcel build index.html --no-cache",
-    "postbuild": "npx -y replace 'export default{}' '' dist/sw.js --yes"
+    "start": "NODE_ENV=development parcel serve ./index.html",
+    "build": "rm -rf dist && parcel build index.html --no-cache"
   },
   "keywords": [
     "weather",
@@ -32,12 +31,12 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "~7.13.12",
-    "@parcel/packager-raw-url": "~2.0.0-beta.2",
-    "@parcel/transformer-image": "~2.0.0-beta.2",
-    "@parcel/transformer-webmanifest": "~2.0.0-beta.2",
+    "@parcel/packager-raw-url": "^2.0.0-nightly.2266",
+    "@parcel/transformer-image": "^2.0.0-nightly.2266",
+    "@parcel/transformer-webmanifest": "^2.0.0-nightly.2266",
     "autoprefixer": "~10.2.5",
     "cpy-cli": "~3.1.1",
-    "parcel": "~2.0.0-beta.2",
+    "parcel": "~2.0.0-nightly.641",
     "parcel-reporter-static-files-copy": "~1.2.2",
     "postcss-import-url": "~7.0.0",
     "posthtml-inline-assets": "~3.1.0"
