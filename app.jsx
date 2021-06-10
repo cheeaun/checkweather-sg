@@ -1,8 +1,8 @@
-import { h, render } from 'preact';
+import { render } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import useInterval from 'react-use/lib/useInterval';
 import useRafState from 'react-use/lib/useRafState';
-import contours from 'd3-contour/src/contours';
+import { contours } from 'd3-contour';
 import nanomemoize from 'nano-memoize';
 import { featureCollection, point, polygon, round } from '@turf/helpers';
 
@@ -16,8 +16,8 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 
-import arrowPath from 'url:./assets/arrow-down-white.png';
-import iconSVGPath from 'url:./icons/icon-standalone.svg';
+import arrowPath from './assets/arrow-down-white.png';
+import iconSVGPath from './icons/icon-standalone.svg';
 
 import chaikin from './utils/chaikin';
 
@@ -862,12 +862,6 @@ render(<Player />, document.getElementById('player'));
     labelLayerId,
   );
 })();
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js');
-  });
-}
 
 const isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') !== -1;
 if (isSafari) {

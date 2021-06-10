@@ -1,10 +1,11 @@
 {
   "name": "checkweather-sg",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Yet another weather app for Singapore",
   "scripts": {
-    "start": "NODE_ENV=development parcel serve ./index.html",
-    "build": "rm -rf dist && parcel build index.html --no-cache"
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
   },
   "keywords": [
     "weather",
@@ -16,30 +17,24 @@
   "author": "Lim Chee Aun",
   "license": "MIT",
   "dependencies": {
-    "@parcel/babel-plugin-transform-runtime": "~2.0.0-nightly.1823",
-    "@parcel/babel-preset-env": "~2.0.0-beta.2",
     "@turf/helpers": "~6.3.0",
-    "d3-contour": "~2.0.0",
+    "d3-contour": "~3.0.1",
     "firebase": "~9.0.0-beta.1",
     "nano-memoize": "~1.2.1",
     "preact": "~10.5.13",
-    "react-use": "~17.2.3",
-    "workbox-cacheable-response": "~6.1.5",
-    "workbox-expiration": "~6.1.5",
-    "workbox-routing": "~6.1.5",
-    "workbox-strategies": "~6.1.5"
+    "react-use": "~17.2.4"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "~7.13.12",
-    "@parcel/packager-raw-url": "^2.0.0-nightly.2266",
-    "@parcel/transformer-image": "^2.0.0-nightly.2266",
-    "@parcel/transformer-webmanifest": "^2.0.0-nightly.2266",
-    "autoprefixer": "~10.2.5",
-    "cpy-cli": "~3.1.1",
-    "parcel": "~2.0.0-nightly.641",
-    "parcel-reporter-static-files-copy": "~1.2.2",
-    "postcss-import-url": "~7.0.0",
-    "posthtml-inline-assets": "~3.1.0"
+    "@preact/preset-vite": "^2.1.0",
+    "@vitejs/plugin-legacy": "^1.4.1",
+    "autoprefixer": "~10.2.6",
+    "vite": "~2.3.7",
+    "vite-plugin-pwa": "~0.7.3",
+    "workbox-cacheable-response": "~6.1.5",
+    "workbox-expiration": "~6.1.5",
+    "workbox-precaching": "~6.1.5",
+    "workbox-routing": "~6.1.5",
+    "workbox-strategies": "~6.1.5"
   },
   "browserslist": [
     ">0.2%",
@@ -47,9 +42,5 @@
     "not op_mini all",
     "not chrome < 51",
     "not safari < 10"
-  ],
-  "alias": {
-    "react": "preact/compat",
-    "react-dom": "preact/compat"
-  }
+  ]
 }

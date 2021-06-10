@@ -3,3 +3,4 @@ dist
 .parcel-cache
 node_modules
 visualization
+assets/*.geojson

@@ -6,18 +6,9 @@ import {
 } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { precacheAndRoute } from 'workbox-precaching';
 
-registerRoute(
-  ({ request }) => request.mode === 'navigate',
-  new NetworkFirst({
-    cacheName: 'index',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [200],
-      }),
-    ],
-  }),
-);
+precacheAndRoute(self.__WB_MANIFEST);
 
 registerRoute(
   ({ request }) =>
@@ -37,7 +28,9 @@ registerRoute(
 );
 
 registerRoute(
-  ({ request }) => request.destination === 'image',
+  ({ request }) =>
+    request.destination === 'image' ||
+    /\.(jpeg|jpg|gif|png|svg)$/i.test(request.url),
   new CacheFirst({
     cacheName: 'images',
     plugins: [
