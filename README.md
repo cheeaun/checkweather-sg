@@ -1,6 +1,10 @@
-# Check Weather SG
+<div align="center">
+  <img src="icons/icon-standalone.svg" width="120" alt="">
 
-> ☀️🌧 Yet another weather app for Singapore
+  # Check Weather SG
+
+  **☀️🌧 Yet another weather app for Singapore**
+</div>
 
 ## Story
 
@@ -52,10 +56,9 @@ There are currently 3 channels:
 
 [Node.js](https://nodejs.org/en/) is required to run this web app. Here's a list of readily-provided scripts:
 
-- `npm start` - starts a local server
-- `npm run build-prod` - build the files for production in `dist` folder
-
-🚧 Due to a bug in the local server ([Parcel](https://parceljs.org/)), loading the local server path (e.g. `http://localhost:1234/`) will return an empty page. Append `/index.html` to the path to see the page.
+- `npm start` - starts a local server for development
+- `npm run build` - build the files for production in `dist` folder
+- `npm run serve` - starts a local server to preview production build
 
 ## Copyright & license
 
