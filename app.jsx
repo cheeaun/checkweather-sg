@@ -561,7 +561,7 @@ const Player = () => {
   );
 
   const indexPercentage = ((index - 1) / (snapshotsCount - 1)) * 100;
-  const sparklineHeight = Math.max((maxSGCoveragePercentage / 100) * 40, 30);
+  const sparklineHeight = 40;
   const playIconSize = Math.max((maxSGCoveragePercentage / 100) * 24, 16);
 
   return (
