@@ -51,6 +51,8 @@ export default defineConfig({
             sizes: '640x1136',
           },
         ],
+        orientation: 'any',
+        categories: ['weather', 'rain', 'rainfall', 'singapore', 'map'],
       },
     }),
   ],
