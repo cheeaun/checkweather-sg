@@ -22,7 +22,7 @@ import iconSVGPath from './icons/icon-standalone.svg';
 import chaikin from './utils/chaikin';
 
 // const TESTING_MODE = location.hash === '#test-mode';
-// const testSnapshot = require('./utils/testSnapshot').default;
+// import testSnapshot from './utils/testSnapshot';
 
 // Initialize Firebase
 const firebaseApp = initializeApp({
