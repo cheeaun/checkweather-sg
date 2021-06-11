@@ -23,6 +23,12 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
+            src: 'icons/maskable-icon.png',
+            sizes: '196x196',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
+          {
             src: 'icons/icon-192.png',
             sizes: '192x192',
             type: 'image/png',
@@ -33,11 +39,28 @@ export default defineConfig({
             type: 'image/png',
           },
         ],
+        screenshots: [
+          {
+            src: 'screenshots/1.jpg',
+            type: 'image/jpg',
+            sizes: '640x1136',
+          },
+          {
+            src: 'screenshots/2.jpg',
+            type: 'image/jpg',
+            sizes: '640x1136',
+          },
+        ],
       },
     }),
   ],
   build: {
     assetsInlineLimit: 0,
+    terserOptions: {
+      format: {
+        comments: false,
+      },
+    },
     rollupOptions: {
       output: {
         manualChunks: undefined,
