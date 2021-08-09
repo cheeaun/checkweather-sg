@@ -393,6 +393,9 @@ function debounce(fn, wait = 1) {
 }
 
 const styleDataLoaded = new Promise((res) => {
+  map.once('load', () => {
+    _StatHat.push(['_trackCount', 'xaOwb7uz0Zc0KdVBmU-EKyBSYTB5', 1.0]);
+  });
   map.once('styledata', res);
 });
 
