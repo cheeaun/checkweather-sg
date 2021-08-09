@@ -17,25 +17,25 @@
   "author": "Lim Chee Aun",
   "license": "MIT",
   "dependencies": {
-    "@turf/helpers": "~6.3.0",
+    "@turf/helpers": "~6.5.0",
     "d3-contour": "~3.0.1",
-    "firebase": "~9.0.0-beta.1",
+    "firebase": "~9.0.0-beta.8",
     "nano-memoize": "~1.2.1",
-    "preact": "~10.5.13",
+    "preact": "~10.5.14",
     "react-use": "~17.2.4"
   },
   "devDependencies": {
-    "@preact/preset-vite": "^2.1.0",
-    "@vitejs/plugin-legacy": "^1.4.1",
-    "autoprefixer": "~10.2.6",
+    "@preact/preset-vite": "~2.1.0",
+    "@vitejs/plugin-legacy": "~1.5.1",
+    "autoprefixer": "~10.3.1",
     "postcss-import-url": "~7.0.0",
-    "vite": "~2.3.7",
-    "vite-plugin-pwa": "~0.7.3",
-    "workbox-cacheable-response": "~6.1.5",
-    "workbox-expiration": "~6.1.5",
-    "workbox-precaching": "~6.1.5",
-    "workbox-routing": "~6.1.5",
-    "workbox-strategies": "~6.1.5"
+    "vite": "~2.4.4",
+    "vite-plugin-pwa": "~0.10.0",
+    "workbox-cacheable-response": "~6.2.2",
+    "workbox-expiration": "~6.2.2",
+    "workbox-precaching": "~6.2.2",
+    "workbox-routing": "~6.2.2",
+    "workbox-strategies": "~6.2.2"
   },
   "browserslist": [
     ">0.2%",
