@@ -431,9 +431,15 @@ const Player = () => {
     if (firstLoad) console.timeEnd('Fetch Snapshots');
     setLoading(false);
 
-    memorySaverMode = s.docs.every(
-      (d) => d.data().coverage_percentage.all > 90,
-    );
+    // memorySaverMode = s.docs.every(
+    //   (d) => d.data().coverage_percentage.all > 90,
+    // );
+    const averageCoverage =
+      s.docs
+        .map((d) => d.data().coverage_percentage.all)
+        .reduce((a, b) => a + b) / s.docs.length;
+    // console.log(averageCoverage);
+    memorySaverMode = averageCoverage > 50;
 
     const processSnapshots = () => {
       console.time('Process Snapshots');
