@@ -741,6 +741,7 @@ render(<Player />, document.getElementById('player'));
   const waterPaint = {
     'fill-extrusion-color': waterOverlayColor,
     'fill-extrusion-opacity': waterOverlayOpacity,
+    'fill-extrusion-base': 100,
     'fill-extrusion-height': 101,
     'fill-extrusion-vertical-gradient': false,
   };
