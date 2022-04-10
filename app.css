@@ -1,4 +1,4 @@
-@import 'https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css';
+@import 'maplibre-gl/dist/maplibre-gl.css';
 
 * {
   box-sizing: border-box;
@@ -283,31 +283,31 @@ svg {
   color: #0088cc;
 }
 
-.mapboxgl-ctrl-custom-pitch {
+.maplibregl-ctrl-custom-pitch {
   font-weight: bold;
   color: #333;
   font-size: 15px;
   letter-spacing: -0.5px;
 }
-.active .mapboxgl-ctrl-custom-pitch {
+.active .maplibregl-ctrl-custom-pitch {
   color: #4285f4;
 }
-.mapboxgl-ctrl-custom-pitch span {
+.maplibregl-ctrl-custom-pitch span {
   display: block;
   transition: transform 0.3s ease-in-out;
 }
 
-.mapboxgl-ctrl-custom-clouds-mode {
+.maplibregl-ctrl-custom-clouds-mode {
   color: #333;
 }
-.mapboxgl-ctrl-custom-clouds-mode svg {
+.maplibregl-ctrl-custom-clouds-mode svg {
   width: 16px;
   height: 16px;
 }
-.active .mapboxgl-ctrl-custom-clouds-mode {
+.active .maplibregl-ctrl-custom-clouds-mode {
   color: #4285f4;
 }
-.active .mapboxgl-ctrl-custom-clouds-mode svg {
+.active .maplibregl-ctrl-custom-clouds-mode svg {
   animation: floating 3s ease-in-out infinite both;
 }
 @keyframes floating {

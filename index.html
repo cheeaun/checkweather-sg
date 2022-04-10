@@ -8,12 +8,11 @@
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
     <meta name="description" content="Yet another weather app for Singapore" />
-    <link rel="preconnect" href="https://api.mapbox.com" crossorigin />
-    <link rel="dns-prefetch" href="https://api.mapbox.com" crossorigin />
+    <link rel="preconnect" href="https://api.maptiler.com" crossorigin />
     <link
-      rel="preload"
-      as="script"
-      href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"
+      rel="preconnect"
+      href="https://firestore.googleapis.com"
+      crossorigin
     />
     <link
       rel="preload"
@@ -106,16 +105,9 @@
       </div>
       <div id="self-promo">
         Like my work?
-        <a target="_blank" href="https://www.buymeacoffee.com/cheeaun"
-          ><img
-            src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg"
-            alt="Buy me a coffee"
-            width="16"
-            height="16"
-            loading="lazy"
-          />
-          Buy me a coffee!</a
-        >
+        <a target="_blank" href="https://www.buymeacoffee.com/cheeaun">
+          Buy me a coffee!
+        </a>
       </div>
       <a
         href="https://apps.apple.com/app/check-weather-sg/id1510170224"
@@ -124,7 +116,7 @@
         class="sns-button"
         > Download on the App Store</a
       >
-      <a
+      <!-- <a
         href="https://twitter.com/checkweathersg"
         target="_blank"
         id="twitter-button"
@@ -136,7 +128,7 @@
           />
         </svg>
         Follow @checkweathersg
-      </a>
+      </a> -->
       <a
         href="https://t.me/checkweathersg"
         target="_blank"
@@ -160,17 +152,67 @@
             >@cheeaun</a
           >.</span
         >
-        <span class="ib"
-          >Open-sourced on
+        <span class="ib">
+          Open-sourced on
           <a
             href="https://github.com/cheeaun/checkweather-sg"
             target="_blank"
             rel="noopener nofollow"
             >GitHub</a
-          >.</span
-        >
+          >.
+        </span>
         <br />
-        <span class="ib"
+        <span class="ib">
+          &copy;
+          <a
+            href="https://www.maptiler.com/copyright/"
+            target="_blank"
+            rel="noopener nofollow"
+          >
+            MapTiler
+          </a>
+        </span>
+        <span class="ib">
+          &copy;
+          <a
+            href="https://www.openstreetmap.org/copyright"
+            target="_blank"
+            rel="noopener nofollow"
+          >
+            OpenStreetMap contributors
+          </a>
+        </span>
+        <span class="ib">
+          &copy;
+          <a
+            href="https://data.gov.sg/privacy-and-website-terms#site-terms"
+            target="_blank"
+            rel="noopener nofollow"
+          >
+            Data.gov.sg
+          </a>
+        </span>
+        <span class="ib">
+          &copy;
+          <a
+            href="http://www.weather.gov.sg/terms-of-use"
+            target="_blank"
+            rel="noopener nofollow"
+          >
+            Meteorological Service Singapore
+          </a>
+        </span>
+        <span class="ib">
+          &copy;
+          <a
+            href="http://www.nea.gov.sg/open-data-licence/"
+            target="_blank"
+            rel="noopener nofollow"
+          >
+            National Environment Agency
+          </a>
+        </span>
+        <!-- <span class="ib"
           >&copy;
           <a
             href="https://www.mapbox.com/about/maps/"
@@ -214,7 +256,7 @@
             rel="noopener nofollow"
             >National Environment Agency</a
           ></span
-        >
+        > -->
       </footer>
       <button id="legend-close">Close</button>
     </div>
@@ -228,7 +270,6 @@
       </linearGradient>
     </defs>
   </svg>
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script>
   <script type="module" src="./app.jsx"></script>
   <!-- Cloudflare Web Analytics -->
   <script

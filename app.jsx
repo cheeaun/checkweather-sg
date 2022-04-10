@@ -2,9 +2,12 @@ import { render } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import useInterval from 'react-use/lib/useInterval';
 import useRafState from 'react-use/lib/useRafState';
+import maplibregl from 'maplibre-gl';
 import { contours } from 'd3-contour';
 import nanomemoize from 'nano-memoize';
 import { featureCollection, point, polygon, round } from '@turf/helpers';
+
+const { VITE_MAPTILER_KEY: MAPTILER_KEY } = import.meta.env;
 
 import { initializeApp } from 'firebase/app';
 import {
@@ -117,8 +120,6 @@ const sgPolygon = {
   ],
 };
 
-mapboxgl.accessToken =
-  'pk.eyJ1IjoiY2hlZWF1biIsImEiOiJjam9weHp6MTUwZThvM3FwM3pjd2J1ZGU5In0.gW0WGZAbconHv5JYwSFI6w';
 if (window.$map) window.$map.remove();
 
 const bounds = [lowerLong, lowerLat, upperLong, upperLat];
@@ -126,11 +127,12 @@ const fitBoundsOptions = () => ({
   padding: window.innerWidth > 640 && window.innerHeight > 640 ? 120 : 0,
 });
 const maxZoom = 14;
-const map = (window.$map = new mapboxgl.Map({
+const map = (window.$map = new maplibregl.Map({
   container: 'map',
   center,
   // style: 'mapbox://styles/mapbox/dark-v10?optimize=true',
-  style: 'mapbox://styles/cheeaun/ck7rpspsa2mwh1imt7s5ual7l',
+  // style: 'mapbox://styles/cheeaun/ck7rpspsa2mwh1imt7s5ual7l',
+  style: `https://api.maptiler.com/maps/aecd4cb7-a35b-4c10-89aa-0f4bd52ed1cb/style.json?key=${MAPTILER_KEY}`,
   minZoom: 8,
   maxZoom,
   renderWorldCopies: false,
@@ -146,16 +148,13 @@ map.touchZoomRotate.disableRotation();
 
 // Controls
 map.addControl(
-  new mapboxgl.NavigationControl({
+  new maplibregl.NavigationControl({
     showCompass: false,
   }),
   'top-right',
 );
 map.addControl(
-  new mapboxgl.GeolocateControl({
-    positionOptions: {
-      enableHighAccuracy: true,
-    },
+  new maplibregl.GeolocateControl({
     trackUserLocation: true,
   }),
   'top-right',
@@ -165,7 +164,7 @@ class SnapBoundaryControl {
   onAdd(map) {
     this._map = map;
     this._container = document.createElement('div');
-    this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+    this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
 
     const button = document.createElement('button');
     button.type = 'button';
@@ -737,30 +736,76 @@ render(<Player />, document.getElementById('player'));
     ...radarColors,
   ];
 
+  // Using fill-extrusion here because
+  // https://github.com/mapbox/mapbox-gl-js/issues/4090#issuecomment-1054711990
+  // Tiles overlap and the opacity overlaps
+  const waterOverlayColor = '#070707';
+  const waterOverlayOpacity = 0.6;
+  const waterPaint = {
+    'fill-extrusion-color': waterOverlayColor,
+    'fill-extrusion-opacity': waterOverlayOpacity,
+    'fill-extrusion-height': 101,
+    'fill-extrusion-vertical-gradient': false,
+  };
+  map.addLayer(
+    {
+      id: 'water-overlay',
+      type: 'fill-extrusion',
+      source: 'openmaptiles',
+      'source-layer': 'water',
+      paint: waterPaint,
+    },
+    labelLayerId,
+  );
+
   map.addLayer(
     {
       id: 'rainradar',
-      type: 'fill',
+      type: 'fill-extrusion',
       source: 'rainradar',
-      layout: {
-        'fill-sort-key': ['number', ['get', 'intensity'], 0],
-      },
       paint: {
-        'fill-antialias': false,
-        'fill-color': radarFillColor,
-        'fill-opacity': [
+        'fill-extrusion-vertical-gradient': false,
+        'fill-extrusion-base': ['number', ['get', 'intensity'], 0],
+        'fill-extrusion-height': ['*', 2, ['number', ['get', 'intensity'], 0]],
+        'fill-extrusion-color': radarFillColor,
+        'fill-extrusion-opacity': [
           'interpolate',
           ['linear'],
           ['zoom'],
           8,
-          ['case', ['>', ['number', ['get', 'intensity'], 0], 90], 1, 0.4],
+          1,
           12,
-          0.05,
+          0.15,
         ],
       },
     },
     'water-overlay',
   );
+
+  // map.addLayer(
+  //   {
+  //     id: 'rainradar',
+  //     type: 'fill',
+  //     source: 'rainradar',
+  //     layout: {
+  //       'fill-sort-key': ['number', ['get', 'intensity'], 0],
+  //     },
+  //     paint: {
+  //       'fill-antialias': false,
+  //       'fill-color': radarFillColor,
+  //       'fill-opacity': [
+  //         'interpolate',
+  //         ['linear'],
+  //         ['zoom'],
+  //         8,
+  //         ['case', ['>', ['number', ['get', 'intensity'], 0], 90], 1, 0.4],
+  //         12,
+  //         0.05,
+  //       ],
+  //     },
+  //   },
+  //   'water-overlay',
+  // );
 
   map.addLayer({
     id: 'tempreadings',
@@ -774,6 +819,7 @@ render(<Player />, document.getElementById('player'));
       'text-ignore-placement': true,
       'text-size': ['interpolate', ['linear'], ['zoom'], 8, 10, 14, 28],
       'text-padding': 1,
+      'text-font': ['Noto Sans Regular'],
     },
     paint: {
       'text-color': 'yellow',
@@ -821,6 +867,7 @@ render(<Player />, document.getElementById('player'));
       'text-size': ['interpolate', ['linear'], ['zoom'], 8, 8, 14, 14 * 1.1],
       'text-offset': [0, -1.2],
       'text-padding': 0,
+      'text-font': ['Noto Sans Regular'],
     },
     paint: {
       'text-color': 'orange',
@@ -841,6 +888,7 @@ render(<Player />, document.getElementById('player'));
       'text-ignore-placement': true,
       'text-offset': [0, 1.2],
       'text-padding': 0,
+      'text-font': ['Noto Sans Regular'],
     },
     paint: {
       'text-color': 'aqua',

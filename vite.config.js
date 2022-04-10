@@ -56,6 +56,11 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    host: true,
+    hmr: false,
+    port: 8082,
+  },
   build: {
     minify: 'terser', // https://github.com/vitejs/vite/pull/5168
     sourcemap: true,
@@ -67,7 +72,12 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: (id) => {
+          // console.log(id);
+          if (id.includes('maplibre-gl')) return 'maplibre-gl';
+          if (id.includes('node_modules')) return 'vendor';
+          return undefined;
+        },
       },
     },
   },

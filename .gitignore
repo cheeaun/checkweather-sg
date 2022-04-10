@@ -4,3 +4,4 @@ dist
 node_modules
 visualization
 assets/*.geojson
+.env

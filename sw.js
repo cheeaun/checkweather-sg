@@ -17,7 +17,7 @@ registerRoute(
     cacheName: 'static-resources',
     plugins: [
       new CacheableResponsePlugin({
-        statuses: [200],
+        statuses: [0, 200],
       }),
       new ExpirationPlugin({
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
@@ -40,7 +40,7 @@ registerRoute(
         purgeOnQuotaError: true,
       }),
       new CacheableResponsePlugin({
-        statuses: [200],
+        statuses: [0, 200],
       }),
     ],
   }),
@@ -56,7 +56,7 @@ registerRoute(
         purgeOnQuotaError: true,
       }),
       new CacheableResponsePlugin({
-        statuses: [200],
+        statuses: [0, 200],
       }),
     ],
   }),
@@ -72,7 +72,39 @@ registerRoute(
         purgeOnQuotaError: true,
       }),
       new CacheableResponsePlugin({
-        statuses: [200],
+        statuses: [0, 200],
+      }),
+    ],
+  }),
+);
+
+registerRoute(
+  /.*api\.maptiler\.com\/fonts/,
+  new CacheFirst({
+    cacheName: 'maptiler-fonts',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 10,
+        purgeOnQuotaError: true,
+      }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+    ],
+  }),
+);
+
+registerRoute(
+  /.*api\.maptiler\.com/,
+  new CacheFirst({
+    cacheName: 'maptiler',
+    plugins: [
+      new ExpirationPlugin({
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+        purgeOnQuotaError: true,
+      }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
       }),
     ],
   }),
@@ -84,7 +116,7 @@ registerRoute(
     cacheName: 'api',
     plugins: [
       new CacheableResponsePlugin({
-        statuses: [200],
+        statuses: [0, 200],
       }),
     ],
   }),
