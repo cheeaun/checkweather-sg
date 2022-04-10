@@ -348,7 +348,7 @@ svg {
 }
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
   #player-content {
-    background-color: rgba(24, 24, 24, 0.4);
+    background-color: rgba(100, 100, 100, 0.4);
     backdrop-filter: blur(30px) saturate(3);
     -webkit-backdrop-filter: blur(30px) saturate(3);
   }
