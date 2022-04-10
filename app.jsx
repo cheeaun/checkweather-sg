@@ -762,8 +762,7 @@ render(<Player />, document.getElementById('player'));
       source: 'rainradar',
       paint: {
         'fill-extrusion-vertical-gradient': false,
-        'fill-extrusion-base': ['number', ['get', 'intensity'], 0],
-        'fill-extrusion-height': ['*', 2, ['number', ['get', 'intensity'], 0]],
+        'fill-extrusion-height': ['number', ['get', 'intensity'], 0],
         'fill-extrusion-color': radarFillColor,
         'fill-extrusion-opacity': [
           'interpolate',
