@@ -434,8 +434,8 @@ const Player = () => {
       s.docs
         .map((d) => d.data().coverage_percentage.all)
         .reduce((a, b) => a + b) / s.docs.length;
-    // console.log(averageCoverage);
-    memorySaverMode = averageCoverage > 50;
+    console.log({ averageCoverage });
+    memorySaverMode = averageCoverage > 25;
 
     const processSnapshots = () => {
       console.time('Process Snapshots');
