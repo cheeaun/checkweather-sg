@@ -825,9 +825,8 @@ render(<Player />, document.getElementById('player'));
     },
   });
 
-  map.loadImage(arrowPath, (e, image) => {
-    map.addImage('arrow', image);
-  });
+  const arrowImage = await map.loadImage(arrowPath);
+  map.addImage('arrow', arrowImage.data);
   map.addLayer(
     {
       id: 'windirections',
