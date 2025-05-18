@@ -276,11 +276,9 @@ svg {
 .sns-button svg {
   vertical-align: middle;
 }
-#twitter-button {
-  color: #1da1f2;
-}
 #telegram-button {
   color: #0088cc;
+  border: 2px solid #0088cc;
 }
 
 .maplibregl-ctrl-custom-pitch {
