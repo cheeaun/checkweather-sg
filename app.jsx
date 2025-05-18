@@ -2,7 +2,7 @@ import { render } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import useInterval from 'react-use/lib/useInterval';
 import useRafState from 'react-use/lib/useRafState';
-import maplibregl from 'maplibre-gl';
+import { Map, NavigationControl, GeolocateControl } from 'maplibre-gl';
 import { contours } from 'd3-contour';
 import nanomemoize from 'nano-memoize';
 import { featureCollection, point, polygon, round } from '@turf/helpers';
@@ -127,7 +127,7 @@ const fitBoundsOptions = () => ({
   padding: window.innerWidth > 640 && window.innerHeight > 640 ? 120 : 0,
 });
 const maxZoom = 14;
-const map = (window.$map = new maplibregl.Map({
+const map = (window.$map = new Map({
   container: 'map',
   center,
   // style: 'mapbox://styles/mapbox/dark-v10?optimize=true',
@@ -148,13 +148,13 @@ map.touchZoomRotate.disableRotation();
 
 // Controls
 map.addControl(
-  new maplibregl.NavigationControl({
+  new NavigationControl({
     showCompass: false,
   }),
   'top-right',
 );
 map.addControl(
-  new maplibregl.GeolocateControl({
+  new GeolocateControl({
     trackUserLocation: true,
   }),
   'top-right',
