@@ -612,3 +612,19 @@ input[type='range']::-moz-range-thumb:active {
 .loading #player-sparkline {
   opacity: 0.5;
 }
+
+.screensaver {
+  .maplibregl-ctrl-top-right, #player-button, #info-button {
+    display: none;
+  }
+  #loader {
+    right: 16px;
+  }
+  #player {
+    bottom: 0;
+  }
+  #player-content {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}

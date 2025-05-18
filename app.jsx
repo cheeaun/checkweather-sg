@@ -916,6 +916,21 @@ render(<Player />, document.getElementById('player'));
   );
 })();
 
+styleDataLoaded.then(() => {
+  // If URL search params = ?screensaver
+  if (new URL(window.location.href).searchParams.has('screensaver')) {
+    // Add .screensaver class to body
+    document.body.classList.add('screensaver');
+    // Fit bounds to the edges of the viewport
+    map.fitBounds(
+      [
+        [lowerLong, lowerLat],
+        [upperLong, upperLat],
+      ],
+    );
+  }
+});
+
 const isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') !== -1;
 if (isSafari) {
   setTimeout(function () {
