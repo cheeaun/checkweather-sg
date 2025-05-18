@@ -1,6 +1,6 @@
 {
   "name": "checkweather-sg",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Yet another weather app for Singapore",
   "scripts": {
     "start": "vite",
