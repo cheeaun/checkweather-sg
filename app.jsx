@@ -314,18 +314,31 @@ const genMidValues = nanomemoize(
   },
 );
 
-const showObservations = () => {
-  fetch('https://api.checkweather.sg/v2/observations')
-    .then((res) => res.json())
-    .then((data) => {
-      // console.log('observations', data);
-      const points = data.map((d) => {
-        const { id, lng, lat, ...props } = d;
-        return point([lng, lat], props, { id });
-      });
-      const pointsCollection = featureCollection(points);
-      map.getSource('observations').setData(pointsCollection);
-    });
+const showObservations = async () => {
+  try {
+    // Try the new API first
+    const response = await fetch('https://api2.checkweather.sg/v1/observations');
+    if (!response.ok) throw new Error('New API failed');
+    const data = await response.json();
+    updateObservations(data);
+  } catch (error) {
+    console.log('Falling back to old API');
+    // Fallback to old API if new one fails
+    fetch('https://api.checkweather.sg/v2/observations')
+      .then((res) => res.json())
+      .then(updateObservations)
+      .catch(console.error);
+  }
+};
+
+const updateObservations = (data) => {
+  // console.log('observations', data);
+  const points = data.map((d) => {
+    const { id, lng, lat, ...props } = d;
+    return point([lng, lat], props, { id });
+  });
+  const pointsCollection = featureCollection(points);
+  map.getSource('observations').setData(pointsCollection);
 };
 
 const rafInterval = (fn, delay, immediate = false) => {
