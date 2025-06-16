@@ -21,6 +21,7 @@ import {
 
 import arrowPath from './assets/arrow-down-white.png';
 import iconSVGPath from './icons/icon-standalone.svg';
+import firePath from './assets/fire.png';
 
 import chaikin from './utils/chaikin';
 
@@ -320,6 +321,12 @@ const showObservations = async () => {
     const response = await fetch('https://api2.checkweather.sg/v1/observations');
     if (!response.ok) throw new Error('New API failed');
     const data = await response.json();
+    console.log(data);
+    // Test mock wbgt data
+    // data.forEach((d) => {
+    //   // Set low to high
+    //   if (d.wbgt < 31) d.wbgt = 35;
+    // });
     updateObservations(data);
   } catch (error) {
     console.log('Falling back to old API');
@@ -414,6 +421,16 @@ const weatherDB = query(
   orderBy('id', 'desc'),
   limit(RAINAREA_COUNT),
 );
+
+const heatStressOpacityStyle = [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  10,
+  0.5,
+  12,
+  0.25,
+];
 
 let firstLoad = true;
 let memorySaverMode = false;
@@ -553,6 +570,7 @@ const Player = () => {
       map.setPaintProperty('humidreadings', 'text-opacity', faded ? 0.3 : 1);
       map.setPaintProperty('rainreadings', 'text-opacity', faded ? 0.3 : 1);
       map.setPaintProperty('windirections', 'icon-opacity', faded ? 0.1 : 0.3);
+      map.setPaintProperty('heatstress', 'icon-opacity', faded ? 0.1 : heatStressOpacityStyle);
     }
   }, [index, snapshots]);
 
@@ -840,6 +858,10 @@ render(<Player />, document.getElementById('player'));
 
   const arrowImage = await map.loadImage(arrowPath);
   map.addImage('arrow', arrowImage.data);
+
+  const fireImage = await map.loadImage(firePath);
+  map.addImage('fire', fireImage.data);
+
   map.addLayer(
     {
       id: 'windirections',
@@ -859,6 +881,31 @@ render(<Player />, document.getElementById('player'));
     },
     'tempreadings',
   );
+
+  map.addLayer({
+    id: 'heatstress',
+    type: 'symbol',
+    source: 'observations',
+    minzoom: 8,
+    filter: ['all', ['has', 'wbgt'], ['>=', ['get', 'wbgt'], 31]],
+    layout: {
+      'icon-image': 'fire',
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true,
+      'icon-size': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        10,
+        ['case', ['<', ['get', 'wbgt'], 33], 0.045, 0.08],
+        14,
+        ['case', ['<', ['get', 'wbgt'], 33], 0.25, 0.5],
+      ]
+    },
+    paint: {
+      'icon-opacity': heatStressOpacityStyle,
+    },
+  }, 'tempreadings');
 
   map.addLayer({
     id: 'humidreadings',

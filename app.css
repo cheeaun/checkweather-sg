@@ -143,6 +143,34 @@ svg {
   line-height: 0;
 }
 
+#heat-stress-indicator {
+  animation: heat-flicker 2s ease-in-out infinite alternate;
+  transform-origin: center bottom;
+}
+
+@keyframes heat-flicker {
+  0% {
+    opacity: 0.8;
+    transform: scale(1) rotate(-8deg);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.05) rotate(4deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02) rotate(-3deg);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.08) rotate(6deg);
+  }
+  100% {
+    opacity: 0.85;
+    transform: scale(1.03) rotate(-5deg);
+  }
+}
+
 #wind-compass {
   opacity: 0.7;
   animation: rotate 20s linear both infinite;
