@@ -639,6 +639,10 @@ input[type='range']::-moz-range-thumb:active {
   opacity: 0.5;
 }
 
+.maplibregl-ctrl {
+  filter: invert(.75);
+}
+
 .screensaver {
   .maplibregl-ctrl-top-right, #player-button, #info-button {
     display: none;
