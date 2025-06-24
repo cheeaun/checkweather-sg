@@ -21,7 +21,7 @@ import {
 
 import arrowPath from './assets/arrow-down-white.png';
 import iconSVGPath from './icons/icon-standalone.svg';
-import firePath from './assets/fire.png';
+import firePath from './assets/fire-outline-black.png';
 
 import chaikin from './utils/chaikin';
 
@@ -318,7 +318,9 @@ const genMidValues = nanomemoize(
 const showObservations = async () => {
   try {
     // Try the new API first
-    const response = await fetch('https://api2.checkweather.sg/v1/observations');
+    const response = await fetch(
+      'https://api2.checkweather.sg/v1/observations',
+    );
     if (!response.ok) throw new Error('New API failed');
     const data = await response.json();
     console.log(data);
@@ -427,7 +429,7 @@ const heatStressOpacityStyle = [
   ['linear'],
   ['zoom'],
   10,
-  0.5,
+  1,
   12,
   0.25,
 ];
@@ -570,7 +572,11 @@ const Player = () => {
       map.setPaintProperty('humidreadings', 'text-opacity', faded ? 0.3 : 1);
       map.setPaintProperty('rainreadings', 'text-opacity', faded ? 0.3 : 1);
       map.setPaintProperty('windirections', 'icon-opacity', faded ? 0.1 : 0.3);
-      map.setPaintProperty('heatstress', 'icon-opacity', faded ? 0.1 : heatStressOpacityStyle);
+      map.setPaintProperty(
+        'heatstress',
+        'icon-opacity',
+        faded ? 0.1 : heatStressOpacityStyle,
+      );
     }
   }, [index, snapshots]);
 
@@ -883,31 +889,6 @@ render(<Player />, document.getElementById('player'));
   );
 
   map.addLayer({
-    id: 'heatstress',
-    type: 'symbol',
-    source: 'observations',
-    minzoom: 8,
-    filter: ['all', ['has', 'wbgt'], ['>=', ['get', 'wbgt'], 31]],
-    layout: {
-      'icon-image': 'fire',
-      'icon-allow-overlap': true,
-      'icon-ignore-placement': true,
-      'icon-size': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        10,
-        ['case', ['<', ['get', 'wbgt'], 33], 0.045, 0.08],
-        14,
-        ['case', ['<', ['get', 'wbgt'], 33], 0.25, 0.5],
-      ]
-    },
-    paint: {
-      'icon-opacity': heatStressOpacityStyle,
-    },
-  }, 'tempreadings');
-
-  map.addLayer({
     id: 'humidreadings',
     type: 'symbol',
     source: 'observations',
@@ -953,7 +934,254 @@ render(<Player />, document.getElementById('player'));
     },
   });
 
+  const heatIconSize = 0.175;
+  const zoomedInHeatIconSize = heatIconSize * 3;
+  const largeHeatIconSize = heatIconSize * 1.5;
+  const zoomedInLargeHeatIconSize = largeHeatIconSize * 3;
+  map.addLayer({
+    id: 'heatstress',
+    type: 'symbol',
+    source: 'observations',
+    minzoom: 8,
+    filter: ['all', ['has', 'wbgt'], ['>=', ['get', 'wbgt'], 31]],
+    layout: {
+      'icon-image': 'fire',
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true,
+      'icon-size': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        10,
+        ['case', ['<', ['get', 'wbgt'], 33], heatIconSize, largeHeatIconSize],
+        14,
+        [
+          'case',
+          ['<', ['get', 'wbgt'], 33],
+          zoomedInHeatIconSize,
+          zoomedInLargeHeatIconSize,
+        ],
+      ],
+    },
+    paint: {
+      'icon-opacity': heatStressOpacityStyle,
+    },
+  });
+
   rafInterval(showObservations, 2 * 60 * 1000, true); // every 2 mins
+
+  // Get popover elements
+  const weatherPopover = document.getElementById('weather-popover');
+  const weatherPopoverBody = document.getElementById('weather-popover-body');
+  const tapCircle = document.getElementById('tap-circle');
+
+  // Function to close popover with animation
+  const closePopover = () => {
+    weatherPopover.classList.add('closing');
+    weatherPopover.addEventListener(
+      'animationend',
+      () => {
+        weatherPopover.classList.remove('closing');
+        weatherPopover.hidePopover();
+      },
+      { once: true },
+    );
+  };
+
+  // Close when clicking on the popover content
+  const weatherPopoverContent = document.getElementById(
+    'weather-popover-content',
+  );
+  weatherPopoverContent.onclick = () => {
+    closePopover();
+  };
+
+  // Add click/tap event to find nearby readings with delay to avoid interfering with double-click zoom
+  let clickTimeout;
+  map.on('click', (e) => {
+    clearTimeout(clickTimeout);
+    clickTimeout = setTimeout(() => {
+      const clickedLng = e.lngLat.lng;
+      const clickedLat = e.lngLat.lat;
+
+      // Calculate thumb-sized radius based on zoom level
+      const zoom = map.getZoom();
+      // Base radius in pixels (roughly thumb size)
+      const baseRadiusPixels = 30;
+      // Convert pixels to map units (degrees) based on zoom
+      const metersPerPixel =
+        (40075016.686 * Math.abs(Math.cos((clickedLat * Math.PI) / 180))) /
+        Math.pow(2, zoom + 8);
+      const radiusMeters = baseRadiusPixels * metersPerPixel;
+      const radiusDegrees = radiusMeters / 111320; // Rough conversion: 1 degree ≈ 111.32 km
+
+      // Show tap circle
+      const point = map.project([clickedLng, clickedLat]);
+      tapCircle.style.left = point.x - baseRadiusPixels + 'px';
+      tapCircle.style.top = point.y - baseRadiusPixels + 'px';
+      tapCircle.style.width = baseRadiusPixels * 2 + 'px';
+      tapCircle.style.height = baseRadiusPixels * 2 + 'px';
+      tapCircle.style.display = 'block';
+
+      // Get the current observations data
+      const observationsSource = map.getSource('observations');
+      const observationsData = observationsSource._data;
+
+      if (
+        !observationsData ||
+        !observationsData.features ||
+        observationsData.features.length === 0
+      ) {
+        return; // No dialog if no data
+      }
+
+      // Find nearby observation points (within the calculated radius)
+      const nearbyFeatures = [];
+
+      observationsData.features.forEach((feature) => {
+        const [lng, lat] = feature.geometry.coordinates;
+        // Simple distance calculation (good enough for Singapore's small area)
+        const distance = Math.sqrt(
+          Math.pow(lng - clickedLng, 2) + Math.pow(lat - clickedLat, 2),
+        );
+
+        if (distance <= radiusDegrees) {
+          nearbyFeatures.push({ feature, distance });
+        }
+      });
+
+      // Force animation restart by removing and re-adding the element
+      tapCircle.style.animation = 'none';
+      tapCircle.offsetHeight; // Trigger reflow
+      tapCircle.style.animation = '';
+      tapCircle.className = '';
+
+      if (nearbyFeatures.length === 0) {
+        // Close popover if it's open and no nearby stations found
+        if (weatherPopover.matches(':popover-open')) {
+          closePopover();
+        }
+        return; // No dialog if no nearby stations
+      }
+
+      // Sort by distance and take up to 3 closest stations
+      nearbyFeatures.sort((a, b) => a.distance - b.distance);
+      const stationsToShow = nearbyFeatures.slice(0, 3);
+
+      // Build the dialog HTML with semantic markup
+      let html = '<h3>Readings nearby</h3>';
+      let hasStations = false;
+
+      stationsToShow.forEach((item) => {
+        const props = item.feature.properties;
+        const stationId = item.feature.id || props.id || 'Unknown';
+        const stationName = props.name;
+
+        let readingsHtml = '';
+
+        if (props.temp_celcius !== undefined) {
+          readingsHtml += `<div class="weather-reading">
+          <div class="weather-reading-header">
+            <span class="emoji">🌡️</span>
+            <span>Temperature</span>
+          </div>
+          <div class="weather-reading-value">${props.temp_celcius}°C</div>
+        </div>`;
+        }
+
+        if (props.relative_humidity !== undefined) {
+          readingsHtml += `<div class="weather-reading">
+          <div class="weather-reading-header">
+            <span class="emoji">💧</span>
+            <span>Humidity</span>
+          </div>
+          <div class="weather-reading-value">${props.relative_humidity}%</div>
+        </div>`;
+        }
+
+        if (props.rain_mm !== undefined) {
+          readingsHtml += `<div class="weather-reading">
+          <div class="weather-reading-header">
+            <span class="emoji">🌧️</span>
+            <span>Rain</span>
+          </div>
+          <div class="weather-reading-value">${props.rain_mm}mm</div>
+        </div>`;
+        }
+
+        if (
+          props.wind_speed !== undefined ||
+          props.wind_direction !== undefined
+        ) {
+          let windValue = '';
+
+          if (props.wind_speed !== undefined) {
+            const windSpeedKmh = Math.round(props.wind_speed * 1.852);
+            windValue += `${windSpeedKmh} km/h`;
+          }
+
+          if (props.wind_direction !== undefined) {
+            if (windValue) windValue += ' ';
+            windValue += `<img src="assets/arrow-down-white.png" class="wind-arrow" style="transform: rotate(${props.wind_direction}deg)" alt="Wind direction">`;
+          }
+
+          readingsHtml += `<div class="weather-reading">
+          <div class="weather-reading-header">
+            <span class="emoji">💨</span>
+            <span>Wind</span>
+          </div>
+          <div class="weather-reading-value">${windValue}</div>
+        </div>`;
+        }
+
+        if (props.wbgt !== undefined && props.wbgt >= 31) {
+          let riskClass = 'moderate';
+          let riskText = 'Moderate';
+          if (props.wbgt >= 33) {
+            riskClass = 'high';
+            riskText = 'High';
+          }
+
+          readingsHtml += `<div class="weather-reading heat-risk ${riskClass}">
+          <div class="weather-reading-header">
+            <span class="emoji">🔥</span>
+            <span>Heat stress</span>
+          </div>
+          <div class="weather-reading-value">${props.wbgt}°C (${riskText})</div>
+        </div>`;
+        }
+
+        // Only show weather station if it has readings
+        if (readingsHtml) {
+          hasStations = true;
+          html += `<div class="weather-station">
+            <div class="station-name">${stationName || stationId}</div>
+            <div class="weather-readings">
+              ${readingsHtml}
+            </div>
+          </div>`;
+        }
+      });
+
+      // Only show popover if there are stations with readings
+      if (hasStations) {
+        // Use long animation when stations with readings are found
+        tapCircle.classList.add('long-duration');
+        weatherPopoverBody.innerHTML = html;
+        weatherPopover.showPopover();
+      } else {
+        // Close popover if it's open and no readings found
+        if (weatherPopover.matches(':popover-open')) {
+          closePopover();
+        }
+      }
+    }, 200); // 200ms delay to allow double-click to work
+  });
+
+  // Cancel the weather reading click on double-click to allow zoom
+  map.on('dblclick', () => {
+    clearTimeout(clickTimeout);
+  });
 
   // Mask the area outside Singapore
   map.addLayer(
@@ -982,12 +1210,10 @@ styleDataLoaded.then(() => {
     // Add .screensaver class to body
     document.body.classList.add('screensaver');
     // Fit bounds to the edges of the viewport
-    map.fitBounds(
-      [
-        [lowerLong, lowerLat],
-        [upperLong, upperLat],
-      ],
-    );
+    map.fitBounds([
+      [lowerLong, lowerLat],
+      [upperLong, upperLat],
+    ]);
   }
 });
 
