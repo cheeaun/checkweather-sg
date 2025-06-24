@@ -55,10 +55,10 @@
       data-domain="checkweather.sg"
       src="https://plausible.io/js/plausible.js"
     ></script>
-    <script type="module" crossorigin src="/assets/index-XZi91Sw1.js"></script>
+    <script type="module" crossorigin src="/assets/index-CIdFy99f.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/maplibre-gl-CDfLgF3w.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-PO0Zxmx7.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-BGaoyw2m.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-CbHjQqUN.css">
     <script type="module">import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
     <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
   <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:inline-sw">if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/sw.js', { scope: '/' })})}</script></head>
@@ -103,6 +103,17 @@
             alt="Wind direction arrow"
           />
           Wind Direction</span
+        >
+        <span class="icon-label"
+          ><img
+            src="/assets/fire-outline-black-gmx_FgcO.png"
+            loading="lazy"
+            width="10"
+            height="12"
+            id="heat-stress-indicator"
+            alt="Heat stress indicator"
+          />
+          Heat Stress</span
         >
       </div>
       <div class="intensity">
@@ -281,6 +292,17 @@
     </div>
   </div>
   <div id="player"></div>
+
+  <!-- Tap circle indicator -->
+  <div id="tap-circle"></div>
+
+  <!-- Weather stations popover -->
+  <div id="weather-popover" popover="manual">
+    <div id="weather-popover-content">
+      <div id="weather-popover-body"></div>
+    </div>
+  </div>
+
   <svg width="0" height="0">
     <defs>
       <linearGradient id="spark-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
@@ -291,6 +313,6 @@
   </svg>
 <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
 <script nomodule crossorigin id="vite-legacy-polyfill" src="/assets/polyfills-legacy-Bk0JGW0q.js"></script>
-<script nomodule crossorigin id="vite-legacy-entry" data-src="/assets/index-legacy-BDxXJ3tB.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+<script nomodule crossorigin id="vite-legacy-entry" data-src="/assets/index-legacy-C8dnTLwZ.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
 
 </html>
