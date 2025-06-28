@@ -1122,7 +1122,7 @@ render(<Player />, document.getElementById('player'));
 
           if (props.wind_direction !== undefined) {
             if (windValue) windValue += ' ';
-            windValue += `<img src="assets/arrow-down-white.png" class="wind-arrow" style="transform: rotate(${props.wind_direction}deg)" alt="Wind direction">`;
+            windValue += `<img src="${arrowPath}" class="wind-arrow" style="transform: rotate(${props.wind_direction}deg)" alt="Wind direction">`;
           }
 
           readingsHtml += `<div class="weather-reading">
