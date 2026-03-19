@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
 import legacy from '@vitejs/plugin-legacy';
 import { VitePWA } from 'vite-plugin-pwa';
+import Sonda from 'sonda/vite'; 
 
 export default defineConfig({
   plugins: [
@@ -54,6 +55,11 @@ export default defineConfig({
         orientation: 'any',
         categories: ['weather', 'rain', 'rainfall', 'singapore', 'map'],
       },
+    }),
+    Sonda({
+      deep: true,
+      brotli: true,
+      open: false,
     }),
   ],
   server: {
