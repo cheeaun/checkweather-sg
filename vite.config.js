@@ -7,7 +7,7 @@ import Sonda from 'sonda/vite';
 export default defineConfig({
   plugins: [
     preact(),
-    legacy(),
+    // legacy(),
     VitePWA({
       injectRegister: 'inline',
       strategies: 'injectManifest',
