@@ -62,15 +62,9 @@ export default defineConfig({
     port: 8082,
   },
   build: {
-    minify: 'terser', // https://github.com/vitejs/vite/pull/5168
     sourcemap: true,
     assetsInlineLimit: 0,
-    terserOptions: {
-      format: {
-        comments: false,
-      },
-    },
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         manualChunks: (id) => {
           // console.log(id);

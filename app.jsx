@@ -1,7 +1,6 @@
 import { render } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import useInterval from 'react-use/lib/useInterval';
-import useRafState from 'react-use/lib/useRafState';
+import {useInterval, useRafState} from 'react-use';
 import { Map, NavigationControl, GeolocateControl } from 'maplibre-gl';
 import { contours } from 'd3-contour';
 import nanomemoize from 'nano-memoize';
@@ -1029,8 +1028,9 @@ render(<Player />, document.getElementById('player'));
 
       if (
         !observationsData ||
-        !observationsData.features ||
-        observationsData.features.length === 0
+        !observationsData.geojson ||
+        !observationsData.geojson.features ||
+        observationsData.geojson.features.length === 0
       ) {
         return; // No dialog if no data
       }
@@ -1038,7 +1038,7 @@ render(<Player />, document.getElementById('player'));
       // Find nearby observation points (within the calculated radius)
       const nearbyFeatures = [];
 
-      observationsData.features.forEach((feature) => {
+      observationsData.geojson.features.forEach((feature) => {
         const [lng, lat] = feature.geometry.coordinates;
         // Simple distance calculation (good enough for Singapore's small area)
         const distance = Math.sqrt(

@@ -1,6 +1,7 @@
 {
   "name": "checkweather-sg",
-  "version": "4.0.0",
+  "version": "4.1.0",
+  "type": "module",
   "description": "Yet another weather app for Singapore",
   "scripts": {
     "start": "vite",
@@ -17,26 +18,31 @@
   "author": "Lim Chee Aun",
   "license": "MIT",
   "dependencies": {
-    "@turf/helpers": "~7.2.0",
+    "@turf/helpers": "~7.3.4",
     "d3-contour": "~4.0.2",
-    "firebase": "~11.9.1",
-    "maplibre-gl": "~5.6.0",
+    "firebase": "~12.10.0",
+    "maplibre-gl": "~5.20.2",
     "nano-memoize": "~3.0.16",
-    "preact": "~10.26.9",
+    "preact": "~10.29.0",
     "react-use": "~17.6.0"
   },
   "devDependencies": {
-    "@preact/preset-vite": "~2.10.1",
-    "@vitejs/plugin-legacy": "~6.1.1",
-    "autoprefixer": "~10.4.21",
+    "@preact/preset-vite": "~2.10.4",
+    "@vitejs/plugin-legacy": "~8.0.0",
+    "autoprefixer": "~10.4.27",
     "postcss-import-url": "~7.2.0",
-    "vite": "~6.3.5",
-    "vite-plugin-pwa": "~1.0.0",
-    "workbox-cacheable-response": "~7.3.0",
-    "workbox-expiration": "~7.3.0",
-    "workbox-precaching": "~7.3.0",
-    "workbox-routing": "~7.3.0",
-    "workbox-strategies": "~7.3.0"
+    "vite": "~8.0.0",
+    "vite-plugin-pwa": "~1.2.0",
+    "workbox-cacheable-response": "~7.4.0",
+    "workbox-expiration": "~7.4.0",
+    "workbox-precaching": "~7.4.0",
+    "workbox-routing": "~7.4.0",
+    "workbox-strategies": "~7.4.0"
+  },
+  "overrides": {
+    "vite-plugin-pwa": {
+      "vite": "$vite"
+    }
   },
   "browserslist": [
     ">0.2%",
