@@ -348,10 +348,9 @@ const ensureIconLoaded = async (iconFile) => {
   if (!iconLoadPromises[iconFile]) {
     iconLoadPromises[iconFile] = (async () => {
       try {
-        const loader = weatherIcons[iconFile];
-        if (!loader) return;
-        const mod = await loader();
-        iconUrlCache[iconFile] = mod.default;
+        const url = weatherIcons[iconFile];
+        if (!url) return;
+        iconUrlCache[iconFile] = url;
         const iconKey = `wi-${iconFile}`;
         if (!map.hasImage(iconKey)) {
           const image = await map.loadImage(mod.default);
