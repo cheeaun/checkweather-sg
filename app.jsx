@@ -353,7 +353,7 @@ const ensureIconLoaded = async (iconFile) => {
         iconUrlCache[iconFile] = url;
         const iconKey = `wi-${iconFile}`;
         if (!map.hasImage(iconKey)) {
-          const image = await map.loadImage(mod.default);
+          const image = await map.loadImage(url);
           map.addImage(iconKey, image.data);
         }
         loadedIcons.add(iconFile);
