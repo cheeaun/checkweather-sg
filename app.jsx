@@ -1492,6 +1492,7 @@ render(<Player />, document.getElementById('player'));
     },
     paint: {
       'icon-opacity': 0.9,
+      'icon-opacity-transition': { duration: 1000 }
     },
   });
 })();
@@ -1506,6 +1507,20 @@ styleDataLoaded.then(() => {
       [lowerLong, lowerLat],
       [upperLong, upperLat],
     ]);
+
+    // Auto-toggle 2-hour forecast
+    let layerVisible = false;
+    const INVISIBLE_DURATION = 30_000;
+    const VISIBLE_DURATION = 5_000;
+    const toggleForecast = (visible) => {
+      if (!layerVisible) {
+        map.setLayoutProperty('forecast', 'visibility', 'visible');
+        layerVisible = true;
+      }
+      map.setPaintProperty('forecast', 'icon-opacity', visible ? .6 : 0);
+      setTimeout(() => toggleForecast(!visible), visible ? VISIBLE_DURATION : INVISIBLE_DURATION);
+    };
+    setTimeout(() => toggleForecast(true), INVISIBLE_DURATION);
   }
 });
 
