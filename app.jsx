@@ -21,6 +21,7 @@ import {
 import arrowPath from './assets/arrow-down-white.png';
 import iconSVGPath from './icons/icon-standalone.svg';
 import firePath from './assets/fire-outline-black.png';
+import weatherIcons from './assets/weather-icons/index.js';
 
 import chaikin from './utils/chaikin';
 
@@ -193,6 +194,52 @@ class SnapBoundaryControl {
 }
 map.addControl(new SnapBoundaryControl(), 'top-right');
 
+class ForecastToggleControl {
+  onAdd(map) {
+    this._map = map;
+    this._container = document.createElement('div');
+    this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'maplibregl-ctrl-forecast-toggle';
+    button.title = 'Toggle forecast';
+    button.innerHTML = '<span class="forecast-label">2h</span>';
+    const toggle = () => {
+      if (!map.getLayer('forecast')) return;
+      const visibility = map.getLayoutProperty('forecast', 'visibility');
+      const newVisibility = visibility === 'visible' ? 'none' : 'visible';
+      map.setLayoutProperty('forecast', 'visibility', newVisibility);
+      button.classList.toggle('active', newVisibility === 'visible');
+      const indicator = document.getElementById('forecast-indicator');
+      if (indicator) indicator.hidden = newVisibility !== 'visible';
+    };
+    button.onclick = (e) => {
+      e.preventDefault();
+      toggle();
+    };
+    this._container.appendChild(button);
+
+    const forecastIndicatorClose = document.getElementById('forecast-indicator-close');
+    if (forecastIndicatorClose) {
+      forecastIndicatorClose.onclick = (e) => {
+        e.preventDefault();
+        map.setLayoutProperty('forecast', 'visibility', 'none');
+        button.classList.remove('active');
+        const indicator = document.getElementById('forecast-indicator');
+        if (indicator) indicator.hidden = true;
+      };
+    }
+
+    return this._container;
+  }
+  onRemove() {
+    this._container.parentNode.removeChild(this._container);
+    this._map = undefined;
+  }
+}
+map.addControl(new ForecastToggleControl(), 'top-right');
+
 const $loader = document.getElementById('loader');
 map.on('dataloading', (e) => {
   $loader.hidden = false;
@@ -217,6 +264,12 @@ $legendClose.onclick = (e) => {
   $legend.hidden = true;
 };
 
+const escapeHtml = (str) => String(str)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;');
+
 const convertRainID2Time = nanomemoize((id) => {
   const time = (id.match(/\d{4}$/) || [''])[0].replace(
     /(\d{2})(\d{2})/,
@@ -230,6 +283,88 @@ const convertRainID2Time = nanomemoize((id) => {
   );
   return time;
 });
+
+const forecastWords = [
+  // [KEYWORDS[], icon filename (without prefix and extension, MAKE SURE THIS MATCHES!)]
+  [['cloudy'], 'cloudy'],
+  [['fair'], 'fair-day'],
+  [['fair', 'day'], 'fair-day'],
+  [['fair', 'night'], 'fair-night'],
+  [['fair', 'warm'], 'fair-warm'],
+  [['fog'], 'fog'],
+  [['hazy'], 'hazy'],
+  [['heavy', 'rain'], 'heavy-rain'],
+  [['heavy', 'showers?'], 'heavy-showers'],
+  [['heavy', 'thundery', 'showers?'], 'heavy-thundery-showers'],
+  [['heavy', 'thundery', 'showers?', 'gusty', 'winds?'], 'heavy-thundery-showers-with-gusty-winds'],
+  [['light', 'rain'], 'light-rain'],
+  [['light', 'showers?'], 'light-shower'],
+  [['mist'], 'mist'],
+  [['moderate', 'rain'], 'moderate-rain'],
+  [['partly', 'cloudy'], 'partly-cloudy-day'],
+  [['partly', 'cloudy', 'day'], 'partly-cloudy-day'],
+  [['partly', 'cloudy', 'night'], 'partly-cloudy-night'],
+  [['passing', 'showers?'], 'passing-shower'],
+  [['showers?'], 'shower'],
+  [['slightly', 'hazy'], 'slightly-hazy'],
+  [['thundery', 'showers?'], 'thundery-showers'],
+  [['windy'], 'windy'],
+  // Not in use even by weather.gov.sg but I found them 🤷‍♂️
+  // Maybe they are too rare or deemed not useful for display 🤔
+  // To be safe, add them here 😆
+  [['drizzle'], 'drizzle'],
+  [['overcast'], 'overcast'],
+  [['strong', 'winds?', 'showers?'], 'strong-winds-showers'],
+  [['strong', 'winds?'], 'strong-winds'],
+  [['sunny'], 'sunny'],
+  [['windy', 'cloudy'], 'windy-cloudy'],
+  [['windy', 'fair'], 'windy-fair'],
+  [['windy', 'rain'], 'windy-rain'],
+  [['windy', 'showers?'], 'windy-showers'],
+];
+
+const sortedForecastPatterns = forecastWords
+  .slice()
+  .sort((a, b) => b[0].length - a[0].length)
+  .map(([words, icon]) => [
+    words.map((w) => new RegExp('\\b' + w + '\\b')),
+    'icon-' + icon,
+  ]);
+
+const forecastToIcon = (forecast) => {
+  const f = forecast.toLowerCase().trim();
+  for (const [patterns, icon] of sortedForecastPatterns) {
+    if (patterns.every((p) => p.test(f))) return icon;
+  }
+  return null;
+};
+
+const loadedIcons = new Set();
+const iconLoadPromises = {};
+const iconUrlCache = {};
+
+const ensureIconLoaded = async (iconFile) => {
+  if (loadedIcons.has(iconFile)) return;
+  if (!iconLoadPromises[iconFile]) {
+    iconLoadPromises[iconFile] = (async () => {
+      try {
+        const loader = weatherIcons[iconFile];
+        if (!loader) return;
+        const mod = await loader();
+        iconUrlCache[iconFile] = mod.default;
+        const iconKey = `wi-${iconFile}`;
+        if (!map.hasImage(iconKey)) {
+          const image = await map.loadImage(mod.default);
+          map.addImage(iconKey, image.data);
+        }
+        loadedIcons.add(iconFile);
+      } catch (e) {
+        console.warn(`Failed to load icon: ${iconFile}`, e);
+      }
+    })();
+  }
+  return iconLoadPromises[iconFile];
+};
 
 const convertX2Lng = nanomemoize((x) =>
   round(lowerLong + (x / width) * distanceLong, 4),
@@ -347,6 +482,58 @@ const updateObservations = (data) => {
   });
   const pointsCollection = featureCollection(points);
   map.getSource('observations').setData(pointsCollection);
+};
+
+let forecastValidPeriod = '';
+
+const showForecast = async () => {
+  try {
+    const response = await fetch('https://api2.checkweather.sg/v1/forecast');
+    if (!response.ok) throw new Error('Forecast API failed');
+    const data = await response.json();
+    await updateForecast(data);
+  } catch (error) {
+    console.error('Forecast fetch error:', error);
+  }
+};
+
+const updateForecast = async (data) => {
+  const { area_metadata, items } = data.data;
+  if (!items || !items.length) {
+    forecastValidPeriod = '';
+    return;
+  }
+  // Assuming last item is latest
+  const latestItem = items[items.length - 1];
+  forecastValidPeriod = latestItem.valid_period?.text || '';
+
+  const areaMap = {};
+  area_metadata.forEach((area) => {
+    areaMap[area.name] = area.label_location;
+  });
+
+  const neededIcons = new Set();
+  latestItem.forecasts.forEach((f) => {
+    const iconFile = forecastToIcon(f.forecast);
+    if (iconFile) neededIcons.add(iconFile);
+  });
+  await Promise.all([...neededIcons].map(ensureIconLoaded));
+
+  const points = latestItem.forecasts.map((f) => {
+    const loc = areaMap[f.area];
+    if (!loc) return null;
+    const iconFile = forecastToIcon(f.forecast);
+    const iconKey = iconFile ? `wi-${iconFile}` : null;
+    return point(
+      [loc.longitude, loc.latitude],
+      { icon: iconKey, forecast: f.forecast, area: f.area },
+      { id: f.area },
+    );
+  }).filter(Boolean);
+
+  const pointsCollection = featureCollection(points);
+  const source = map.getSource('forecast');
+  if (source) source.setData(pointsCollection);
 };
 
 const rafInterval = (fn, delay, immediate = false) => {
@@ -576,6 +763,11 @@ const Player = () => {
         'icon-opacity',
         faded ? 0.1 : heatStressOpacityStyle,
       );
+      map.setPaintProperty(
+        'forecast',
+        'icon-opacity',
+        faded ? 0.1 : 0.9,
+      );
     }
   }, [index, snapshots]);
 
@@ -719,6 +911,16 @@ render(<Player />, document.getElementById('player'));
     maxzoom: maxZoom,
     // tolerance: 0.5,
     // buffer: screen.width > 1280 ? 128 : 0,
+  });
+  map.addSource('forecast', {
+    type: 'geojson',
+    data: {
+      type: 'FeatureCollection',
+      features: [],
+    },
+    tolerance: 5,
+    buffer: 0,
+    maxzoom: maxZoom,
   });
 
   const layers = map.getStyle().layers;
@@ -968,6 +1170,7 @@ render(<Player />, document.getElementById('player'));
   });
 
   rafInterval(showObservations, 2 * 60 * 1000, true); // every 2 mins
+  rafInterval(showForecast, 2 * 60 * 1000, true);
 
   // Get popover elements
   const weatherPopover = document.getElementById('weather-popover');
@@ -1025,12 +1228,17 @@ render(<Player />, document.getElementById('player'));
       // Get the current observations data
       const observationsSource = map.getSource('observations');
       const observationsData = observationsSource._data;
+      // Get the current forecast data
+      const forecastSource = map.getSource('forecast');
+      const forecastData = forecastSource && forecastSource._data;
 
       if (
-        !observationsData ||
-        !observationsData.geojson ||
-        !observationsData.geojson.features ||
-        observationsData.geojson.features.length === 0
+        (!observationsData ||
+          !observationsData.geojson ||
+          !observationsData.geojson.features) &&
+        (!forecastData ||
+          !forecastData.geojson ||
+          !forecastData.geojson.features)
       ) {
         return; // No dialog if no data
       }
@@ -1038,17 +1246,43 @@ render(<Player />, document.getElementById('player'));
       // Find nearby observation points (within the calculated radius)
       const nearbyFeatures = [];
 
-      observationsData.geojson.features.forEach((feature) => {
-        const [lng, lat] = feature.geometry.coordinates;
-        // Simple distance calculation (good enough for Singapore's small area)
-        const distance = Math.sqrt(
-          Math.pow(lng - clickedLng, 2) + Math.pow(lat - clickedLat, 2),
-        );
+      if (
+        observationsData &&
+        observationsData.geojson &&
+        observationsData.geojson.features
+      ) {
+        observationsData.geojson.features.forEach((feature) => {
+          const [lng, lat] = feature.geometry.coordinates;
+          // Simple distance calculation (good enough for Singapore's small area)
+          const distance = Math.sqrt(
+            Math.pow(lng - clickedLng, 2) + Math.pow(lat - clickedLat, 2),
+          );
 
-        if (distance <= radiusDegrees) {
-          nearbyFeatures.push({ feature, distance });
-        }
-      });
+          if (distance <= radiusDegrees) {
+            nearbyFeatures.push({ feature, distance });
+          }
+        });
+      }
+
+      // Find nearby forecast areas
+      const nearbyForecasts = [];
+
+      if (
+        forecastData &&
+        forecastData.geojson &&
+        forecastData.geojson.features
+      ) {
+        forecastData.geojson.features.forEach((feature) => {
+          const [lng, lat] = feature.geometry.coordinates;
+          const distance = Math.sqrt(
+            Math.pow(lng - clickedLng, 2) + Math.pow(lat - clickedLat, 2),
+          );
+
+          if (distance <= radiusDegrees) {
+            nearbyForecasts.push({ feature, distance });
+          }
+        });
+      }
 
       // Force animation restart by removing and re-adding the element
       tapCircle.style.animation = 'none';
@@ -1056,12 +1290,12 @@ render(<Player />, document.getElementById('player'));
       tapCircle.style.animation = '';
       tapCircle.className = '';
 
-      if (nearbyFeatures.length === 0) {
+      if (nearbyFeatures.length === 0 && nearbyForecasts.length === 0) {
         // Close popover if it's open and no nearby stations found
         if (weatherPopover.matches(':popover-open')) {
           closePopover();
         }
-        return; // No dialog if no nearby stations
+        return; // No dialog if no nearby stations or forecasts
       }
 
       // Sort by distance and take up to 3 closest stations
@@ -1069,7 +1303,7 @@ render(<Player />, document.getElementById('player'));
       const stationsToShow = nearbyFeatures.slice(0, 3);
 
       // Build the dialog HTML with semantic markup
-      let html = '<h3>Readings nearby</h3>';
+      let html = '';
       let hasStations = false;
 
       stationsToShow.forEach((item) => {
@@ -1153,9 +1387,10 @@ render(<Player />, document.getElementById('player'));
 
         // Only show weather station if it has readings
         if (readingsHtml) {
+          if (!hasStations) html += '<h3>Readings nearby</h3>';
           hasStations = true;
           html += `<div class="weather-station">
-            <div class="station-name">${stationName || stationId}</div>
+            <div class="station-name">${escapeHtml(stationName || stationId)}</div>
             <div class="weather-readings">
               ${readingsHtml}
             </div>
@@ -1163,8 +1398,42 @@ render(<Player />, document.getElementById('player'));
         }
       });
 
+      // Add forecast info
+      let hasForecast = false;
+
+      if (nearbyForecasts.length > 0) {
+        hasForecast = true;
+
+        // Group by forecast type
+        const groups = {};
+        nearbyForecasts.forEach((item) => {
+          const forecast = item.feature.properties.forecast;
+          if (!groups[forecast]) groups[forecast] = [];
+          groups[forecast].push(item);
+        });
+
+        html += `<h3>2-hour forecast${forecastValidPeriod ? ` <small>(${forecastValidPeriod})</small>` : ''}</h3>
+          <div class="forecast-list">`;
+        Object.entries(groups).forEach(([forecast, items]) => {
+          const iconFile = forecastToIcon(forecast);
+          const iconUrl = iconFile ? iconUrlCache[iconFile] || null : null;
+          html += `<div class="forecast-group">
+            ${iconUrl ? `<img src="${iconUrl}" class="forecast-icon" alt="">` : ''}
+            <div class="forecast-group-inner">
+            <div class="forecast-group-label">${escapeHtml(forecast)}</div>
+            <div class="forecast-group-places">`;
+          items.sort((a, b) => a.feature.properties.area.localeCompare(b.feature.properties.area));
+          items.forEach((item, i) => {
+            if (i > 0) html += ' · ';
+            html += `<span class="ib">${escapeHtml(item.feature.properties.area)}</span>`;
+          });
+          html += `</div></div></div>`;
+        });
+        html += `</div>`;
+      }
+
       // Only show popover if there are stations with readings
-      if (hasStations) {
+      if (hasStations || hasForecast) {
         // Use long animation when stations with readings are found
         tapCircle.classList.add('long-duration');
         weatherPopoverBody.innerHTML = html;
@@ -1202,6 +1471,30 @@ render(<Player />, document.getElementById('player'));
     },
     labelLayerId,
   );
+
+  map.addLayer({
+    id: 'forecast',
+    type: 'symbol',
+    source: 'forecast',
+    layout: {
+      'icon-image': ['get', 'icon'],
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true,
+      'visibility': 'none',
+      'icon-size': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        8,
+        0.3,
+        14,
+        0.8,
+      ],
+    },
+    paint: {
+      'icon-opacity': 0.9,
+    },
+  });
 })();
 
 styleDataLoaded.then(() => {

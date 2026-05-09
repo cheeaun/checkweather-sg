@@ -3,6 +3,7 @@
 * {
   box-sizing: border-box;
 }
+
 html,
 body {
   -webkit-text-size-adjust: 100%;
@@ -15,6 +16,7 @@ body {
   user-select: none;
   -webkit-user-select: none;
 }
+
 header {
   pointer-events: none;
   position: absolute;
@@ -22,26 +24,28 @@ header {
   margin: 0;
   padding: 10px;
   color: #fff;
-  background-image: radial-gradient(
-    farthest-side at top left,
-    #343332,
-    transparent
-  );
+  background-image: radial-gradient(farthest-side at top left,
+      #343332,
+      transparent);
 }
+
 header h1 {
   font-size: 20px;
   line-height: 24px;
 }
+
 header p {
   font-size: 12px;
   opacity: 0.4;
   margin-top: 3px;
   margin-left: 3px;
 }
-header > * {
+
+header>* {
   margin: 0;
   padding: 0;
 }
+
 header img {
   vertical-align: middle;
   box-shadow: 0 0 2px rgba(255, 255, 255, 0.25);
@@ -84,15 +88,18 @@ svg {
   transition: 0.3s opacity;
   filter: drop-shadow(0 0 2px #fff);
 }
+
 #loader[hidden] {
   display: block;
   opacity: 0;
   animation-play-state: paused;
 }
+
 @keyframes turning {
   0% {
     transform: rotate(0);
   }
+
   100% {
     transform: rotate(1turn);
   }
@@ -116,12 +123,14 @@ svg {
   align-items: flex-end;
   z-index: 2;
 }
+
 #legend[hidden] {
   opacity: 0;
   pointer-events: none;
   bottom: -50px;
 }
-#legend > div {
+
+#legend>div {
   max-width: 400px;
 }
 
@@ -129,6 +138,7 @@ svg {
   text-transform: uppercase;
   font-size: 11px;
 }
+
 #weather-info-labels span {
   vertical-align: middle;
   display: inline-block;
@@ -138,6 +148,7 @@ svg {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 123123px;
 }
+
 #weather-info-labels span img {
   vertical-align: middle;
   line-height: 0;
@@ -153,18 +164,22 @@ svg {
     opacity: 0.8;
     transform: scale(1) rotate(-8deg);
   }
+
   25% {
     opacity: 1;
     transform: scale(1.05) rotate(4deg);
   }
+
   50% {
     opacity: 0.9;
     transform: scale(1.02) rotate(-3deg);
   }
+
   75% {
     opacity: 1;
     transform: scale(1.08) rotate(6deg);
   }
+
   100% {
     opacity: 0.85;
     transform: scale(1.03) rotate(-5deg);
@@ -175,10 +190,12 @@ svg {
   opacity: 0.7;
   animation: rotate 20s linear both infinite;
 }
+
 @keyframes rotate {
   0% {
     transform: rotate(0);
   }
+
   100% {
     transform: rotate(1turn);
   }
@@ -188,6 +205,7 @@ svg {
   display: flex;
   align-items: center;
 }
+
 #legend .intensity h3 {
   white-space: nowrap;
   margin: 0 1em 0 0;
@@ -196,6 +214,7 @@ svg {
   padding: 0;
   text-transform: uppercase;
 }
+
 .cloud-mode #legend .intensity {
   display: none;
 }
@@ -207,40 +226,39 @@ svg {
   justify-content: space-between;
   width: 100%;
   border-radius: 123123px;
-  background: linear-gradient(
-    to left,
-    #40fffd,
-    #3beeec,
-    #32d0d2,
-    #2cb9bd,
-    #229698,
-    #1c827d,
-    #1b8742,
-    #229f44,
-    #27b240,
-    #2cc53b,
-    #30d43e,
-    #38ef46,
-    #3bfb49,
-    #59fa61,
-    #fefb63,
-    #fdfa53,
-    #fdeb50,
-    #fdd74a,
-    #fcc344,
-    #fab03f,
-    #faa23d,
-    #fb8938,
-    #fb7133,
-    #f94c2d,
-    #f9282a,
-    #dd1423,
-    #be0f1d,
-    #b21867,
-    #d028a6,
-    #f93df5
-  );
+  background: linear-gradient(to left,
+      #40fffd,
+      #3beeec,
+      #32d0d2,
+      #2cb9bd,
+      #229698,
+      #1c827d,
+      #1b8742,
+      #229f44,
+      #27b240,
+      #2cc53b,
+      #30d43e,
+      #38ef46,
+      #3bfb49,
+      #59fa61,
+      #fefb63,
+      #fdfa53,
+      #fdeb50,
+      #fdd74a,
+      #fcc344,
+      #fab03f,
+      #faa23d,
+      #fb8938,
+      #fb7133,
+      #f94c2d,
+      #f9282a,
+      #dd1423,
+      #be0f1d,
+      #b21867,
+      #d028a6,
+      #f93df5);
 }
+
 #rain-intensity-gradient span {
   color: #000;
   text-transform: uppercase;
@@ -255,6 +273,7 @@ svg {
   opacity: 0.75;
   line-height: 1.5em;
 }
+
 #legend footer a {
   color: inherit;
   text-decoration: none;
@@ -271,6 +290,7 @@ svg {
   margin-top: 1em;
   width: 100%;
 }
+
 #legend-close:active {
   opacity: 0.5;
 }
@@ -282,10 +302,12 @@ svg {
   border-radius: 5px;
   text-align: center;
 }
+
 #self-promo a {
   color: inherit;
   vertical-align: middle;
 }
+
 #self-promo img {
   vertical-align: middle;
 }
@@ -301,9 +323,11 @@ svg {
   color: #fff;
   line-height: 1;
 }
+
 .sns-button svg {
   vertical-align: middle;
 }
+
 #telegram-button {
   color: #0088cc;
   border: 2px solid #0088cc;
@@ -315,9 +339,11 @@ svg {
   font-size: 15px;
   letter-spacing: -0.5px;
 }
+
 .active .maplibregl-ctrl-custom-pitch {
   color: #4285f4;
 }
+
 .maplibregl-ctrl-custom-pitch span {
   display: block;
   transition: transform 0.3s ease-in-out;
@@ -326,29 +352,51 @@ svg {
 .maplibregl-ctrl-custom-clouds-mode {
   color: #333;
 }
+
 .maplibregl-ctrl-custom-clouds-mode svg {
   width: 16px;
   height: 16px;
 }
+
 .active .maplibregl-ctrl-custom-clouds-mode {
   color: #4285f4;
 }
+
 .active .maplibregl-ctrl-custom-clouds-mode svg {
   animation: floating 3s ease-in-out infinite both;
 }
+
 @keyframes floating {
   0% {
     transform: translateY(0);
   }
+
   25% {
     transform: translateY(-1px);
   }
+
   75% {
     transform: translateY(2px);
   }
+
   100% {
     transform: translateY(0);
   }
+}
+
+.maplibregl-ctrl-forecast-toggle .forecast-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #333;
+  line-height: 24px;
+  display: block;
+  text-align: center;
+  letter-spacing: .5px;
+}
+
+.maplibregl-ctrl-forecast-toggle.active {
+  border: 2px solid #000;
+  border-radius: 4px;
 }
 
 #player {
@@ -362,6 +410,7 @@ svg {
   width: 100%;
   max-width: 480px;
 }
+
 #player-content {
   box-shadow: inset 0 0 0 1px rgba(50, 50, 50, 0.2);
   background-color: rgba(24, 24, 24, 0.9);
@@ -372,6 +421,7 @@ svg {
   align-items: center;
   animation: show-up 1s ease-out both;
 }
+
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
   #player-content {
     background-color: rgba(100, 100, 100, 0.4);
@@ -379,27 +429,33 @@ svg {
     -webkit-backdrop-filter: blur(30px) saturate(3);
   }
 }
+
 @keyframes show-up {
   0% {
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
 #player-content.loading {
   pointer-events: none;
 }
+
 #player-range {
   flex-grow: 1;
   position: relative;
 }
+
 #player-range svg {
   vertical-align: bottom;
   transition: 0.3s all ease-in-out;
 }
+
 #player-range progress {
   appearance: none;
   display: block;
@@ -410,34 +466,39 @@ svg {
   width: 100%;
   background-color: #333;
 }
+
 .loading #player-range progress {
-  background-image: repeating-linear-gradient(
-    to right,
-    #eee,
-    #eee 5px,
-    transparent 5px,
-    transparent 10px
-  );
+  background-image: repeating-linear-gradient(to right,
+      #eee,
+      #eee 5px,
+      transparent 5px,
+      transparent 10px);
   animation: move-stripes 5s infinite linear both;
   appearance: none;
 }
+
 @keyframes move-stripes {
   0% {
     background-position: 0 0;
   }
+
   100% {
     background-position: 100px 0;
   }
 }
+
 #player-range progress::-webkit-progress-bar {
   background-color: transparent;
 }
+
 #player-range progress::-webkit-progress-value {
   background: transparent linear-gradient(to right, transparent, #fff);
 }
+
 #player-range progress::-moz-progress-bar {
   background: transparent linear-gradient(to right, transparent, #fff);
 }
+
 #player-time {
   position: absolute;
   left: 0;
@@ -450,20 +511,24 @@ svg {
   transition-property: text-shadow, color;
   will-change: left;
 }
+
 #player-time.now {
   color: white;
   text-shadow: 0 0 10px #fff, 0 0 10px #fff;
 }
+
 #player-slider {
   position: absolute;
   left: 0;
   bottom: 0;
   right: 0;
 }
+
 #player-slider input {
   width: 100%;
   margin: 5px 0 0;
 }
+
 #player-labels {
   display: flex;
   justify-content: space-between;
@@ -475,22 +540,27 @@ svg {
   width: 100%;
   margin-top: 9px;
 }
-#player-labels > span {
+
+#player-labels>span {
   padding: 0 1px;
 }
+
 #player-button {
   color: slategray;
   margin-right: 15px;
   cursor: pointer;
   text-align: center;
 }
+
 #player-button.playing {
   color: #fff;
 }
+
 .loading #player-button {
   opacity: 0.6;
   pointer-events: none;
 }
+
 #player-icon {
   display: inline-block;
   border: 2px solid rgba(255, 255, 255, 0.2);
@@ -498,28 +568,35 @@ svg {
   padding: 10px;
   line-height: 0;
 }
+
 #player-button:hover #player-icon {
   border-color: rgba(255, 255, 255, 0.8);
 }
+
 .playing #player-icon {
   animation: glow-shadow 1s infinite alternate ease-in-out;
 }
+
 @keyframes glow-shadow {
   0% {
     box-shadow: 0 0 7.5px rgba(255, 255, 255, 0.5);
   }
+
   100% {
     box-shadow: 0 0 15px rgba(255, 255, 255, 1);
   }
 }
+
 #player-icon svg {
   transition: 0.3s all ease-in-out;
 }
+
 #player-footer {
   margin-top: 1em;
   font-size: 11px;
   color: slategray;
 }
+
 #player-footer b {
   color: whitesmoke;
 }
@@ -535,17 +612,62 @@ svg {
   cursor: pointer;
   outline: 0;
 }
+
 #info-button:active {
   opacity: 0.5;
 }
+
 #info-button svg {
   fill: rgba(255, 255, 255, 0.95);
 }
 
+#forecast-indicator {
+  position: absolute;
+  top: -16px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  color: #fff;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 123123px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+#forecast-indicator[hidden] {
+  display: none;
+}
+
+#forecast-indicator-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+  opacity: 0.7;
+  pointer-events: auto;
+}
+
+#forecast-indicator-close:hover {
+  opacity: 1;
+}
+
 input[type='range'] {
-  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  width: calc(100% + 16px); /* Specific width is required for Firefox. */
-  background: transparent; /* Otherwise white in Chrome */
+  -webkit-appearance: none;
+  /* Hides the slider so that custom slider can be made */
+  width: calc(100% + 16px);
+  /* Specific width is required for Firefox. */
+  background: transparent;
+  /* Otherwise white in Chrome */
   height: 100%;
   position: absolute;
   top: 0px;
@@ -558,9 +680,11 @@ input[type='range'] {
   -webkit-tap-highlight-color: transparent;
   outline: none;
 }
+
 input::-moz-focus-inner {
   border: 0;
 }
+
 input[type='range']:focus {
   outline: none;
 }
@@ -577,6 +701,7 @@ input[type='range']::-webkit-slider-runnable-track {
   display: flex;
   align-items: flex-end;
 }
+
 input[type='range']::-moz-range-track {
   width: 100%;
   height: 100%;
@@ -597,6 +722,7 @@ input[type='range']::-webkit-slider-thumb {
   margin-top: 40px;
   transform: translateY(-50%);
 }
+
 input[type='range']::-moz-range-thumb {
   -webkit-appearance: none;
   height: 20px;
@@ -606,12 +732,14 @@ input[type='range']::-moz-range-thumb {
   background-color: lightgray;
   box-shadow: 0 2px 10px #000;
   cursor: pointer;
-  transform: translateY(5px); /* weird hack, yeah */
+  transform: translateY(5px);
+  /* weird hack, yeah */
 }
 
 input[type='range']::-webkit-slider-thumb:hover {
   background-color: #fff;
 }
+
 input[type='range']::-moz-range-thumb:hover {
   background-color: #fff;
 }
@@ -620,6 +748,7 @@ input[type='range']::-webkit-slider-thumb:active {
   background-color: #fff;
   box-shadow: 0 2px 10px #fff;
 }
+
 input[type='range']::-moz-range-thumb:active {
   background-color: #fff;
   box-shadow: 0 2px 10px #fff;
@@ -628,13 +757,12 @@ input[type='range']::-moz-range-thumb:active {
 #player-sparkline {
   height: 40px;
   width: 100%;
-  background-image: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.03)
-  );
+  background-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.03));
   transition: all 1s ease-in-out;
 }
+
 .loading #player-sparkline {
   opacity: 0.5;
 }
@@ -673,6 +801,7 @@ input[type='range']::-moz-range-thumb:active {
   from {
     transform: translate(-50%, 100%);
   }
+
   to {
     transform: translate(-50%, 0);
   }
@@ -682,6 +811,7 @@ input[type='range']::-moz-range-thumb:active {
   from {
     transform: translate(-50%, 0);
   }
+
   to {
     transform: translate(-50%, 100%);
   }
@@ -705,6 +835,10 @@ input[type='range']::-moz-range-thumb:active {
   font-size: 18px;
   font-weight: 600;
   color: #fff;
+}
+
+#weather-popover-body h3 small {
+  font-weight: normal;
 }
 
 .weather-station {
@@ -817,30 +951,71 @@ input[type='range']::-moz-range-thumb:active {
     transform: scale(0.5);
     opacity: 0.8;
   }
+
   33% {
     transform: scale(1.1);
     opacity: 0.6;
   }
+
   66% {
     transform: scale(1);
     opacity: 0.4;
   }
+
   100% {
     transform: scale(1);
     opacity: 0;
   }
 }
 
+.forecast-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.forecast-group {
+  flex-grow: 1;
+  display: flex;
+  gap: 6px;
+}
+
+.forecast-group-label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  opacity: 0.7;
+}
+
+.forecast-icon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+.forecast-group-places {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
 .screensaver {
-  .maplibregl-ctrl-top-right, #player-button, #info-button {
+
+  .maplibregl-ctrl-top-right,
+  #player-button,
+  #info-button,
+  #forecast-indicator {
     display: none;
   }
+
   #loader {
     right: 16px;
   }
+
   #player {
     bottom: 0;
   }
+
   #player-content {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;

@@ -49,8 +49,9 @@ And... a plethora of open-source projects to make the impossible possible:
 There are currently 3 channels:
 
 1. Push notifications, via [the iOS app](https://github.com/cheeaun/checkweather-sg-native).
-2. [Twitter @checkweathersg](https://twitter.com/checkweathersg)
-3. [Telegram channel /checkweathersg](https://t.me/checkweathersg)
+2. ~~[Twitter @checkweathersg](https://twitter.com/checkweathersg)~~
+3. [Mastodon @checkweathersg@mastodon.sg](https://mastodon.sg/@checkweathersg)
+4. [Telegram channel /checkweathersg](https://t.me/checkweathersg)
 
 ## Technicalities
 
@@ -60,7 +61,9 @@ There are currently 3 channels:
 - `npm run build` - build the files for production in `dist` folder
 - `npm run serve` - starts a local server to preview production build
 
-## Copyright & license
+## Copyright, license & credits
 
 - Data © [Data.gov.sg](https://data.gov.sg/privacy-and-website-terms#site-terms) © [Meteorological Service Singapore](http://www.weather.gov.sg/terms-of-use) © [National Environment Agency](http://www.nea.gov.sg/open-data-licence/)
 - Code licensed under [MIT](https://cheeaun.mit-license.org/)
+- Weather icons from [Meteorological Service Singapore](http://www.weather.gov.sg/terms-of-use)
+- Fire icon from [Noto Color Emoji](https://fonts.google.com/noto/specimen/Noto+Color+Emoji)
